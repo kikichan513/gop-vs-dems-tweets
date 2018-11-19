@@ -24,13 +24,10 @@ body {
 }
 
 .tooltip {
-  border: 2px solid black;
   border-radius: 5px;
   padding: 10px;
   padding-bottom:10px;
   position: absolute;
-  width: 200px;
-  height: 28px;
   pointer-events: none;
 }
 </style>
@@ -38,9 +35,19 @@ body {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
-var margin = {top: 50, right: 80, bottom: 80, left: 200},
-    width = 1000 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+
+var margin = {top: 50, right: 80, bottom: 80, left: 200};
+    width = 1500 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom;
+
+var w = window.innerWidth - window.innerWidth / 3;
+var h = window.innerHeight - window.innerHeight / 4;
+
+var funhash=function(s) {
+    for(var i=0, h=1; i<s.length; i++)
+        h=Math.imul(h+s.charCodeAt(i)|0, 2654435761);
+    return (h^h>>>17)>>>0;
+};
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -53,14 +60,14 @@ var margin = {top: 50, right: 80, bottom: 80, left: 200},
 // COMMENT: We need to make the domain 0 - 1 but I don't know how to do it. 
 // domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
 var xValue = function(d) { return d["Sentiment"];}, // data -> value
-    xScale = d3.scale.linear().range([0, width]).domain([0,1]), // value -> display 
+    xScale = d3.scale.linear().domain([-1,1]).range([0,w]), // value -> display 
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
 // COMMENT: var yValue = function(d) { return Math.random();} // returns random y values but map changes on each refresh.
-var yValue = function(d) { return d["Yaxis"];}, // data -> value
-    yScale = d3.scale.linear().domain([10,0]).range([0,300]), // value -> display
+var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
+    yScale = d3.scale.linear().domain([0, Number.MAX_SAFE_INT]).range([0,h]), // value -> display
     yMap = function(d) { return yScale(yValue(d));} // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left"); 
     // COMMENT: pretty sure this is the function that draws the y axis
@@ -71,8 +78,8 @@ var cValue = function(d) { return d["Party"];},
 
 // add the graph canvas to the body of the webpage
 var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", w + margin.left + margin.right)
+    .attr("height", h + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -82,43 +89,28 @@ var tooltip = d3.select("body").append("div")
     .style("opacity", 0);
 
 // load data
-d3.csv("example.csv", function(error, data) {
+d3.csv("shuffled-small-data.csv", function(error, data) {
 
   // change string (from CSV) into number format
   data.forEach(function(d) {
-    console.log (d)
-    d["Sentiment"] = + d["Sentiment"]
+    d["Sentiment"] = + d["Sentiment"];
   });
 
-  // don't want dots overlapping axis, so add in buffer to data domain
-  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
-  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+  yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
+  xScale.domain([-1, 1]);
 
   // x-axis
   svg.append("g")
       .attr("class", "x axis")
       .attr("fill", "white") 
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + h + ")")
       .call(xAxis)
     .append("text")
       .attr("class", "label")
-      .attr("x", width)
+      .attr("x", w)
       .attr("y", -6)
-      .style("text-anchor", "end")
+      .style("text-anchor", "start")
       .text("Sentiment");
-
-  // y-axis
-  svg.append("g")
-      .attr("class", "y axis")
-      .attr("fill", "white") // COMMENT: made it invisible
-      .call(yAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("");
 
   // draw dots
   svg.selectAll(".dot")
@@ -128,46 +120,22 @@ d3.csv("example.csv", function(error, data) {
       .attr("r", 5)
       .attr("cx", xMap)
       .attr("cy", yMap)
+      .style("opacity", .5)
       .style("fill", function(d) { return colour(cValue(d));}) 
       .on("mouseover", function(d) {
-          
-          tooltip.transition()
-               .duration(200)
-               .style("opacity", .9);
-          tooltip.html("@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")") 
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
-
-
-
+        tooltip.transition()
+             .duration(200)
+             .style("opacity", .9);
+        tooltip.html("@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")") 
+             .style("left", (d3.event.pageX + 5) + "px")
+             .style("background-color", "#D3D3D3")
+             .style("top", (d3.event.pageY - 28) + "px");
       })
       .on("mouseout", function(d) {
           tooltip.transition()
                .duration(500)
                .style("opacity", 0);
       });
-
-  // draw legend
-  var legend = svg.selectAll(".legend")
-      .data(colour.domain())
-      .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-  // draw legend coloured rectangles
-  legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", colour);
-
-  // draw legend text
-  legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d;})
 });
 
 </script>

@@ -9,6 +9,7 @@
 <style>
 body {
   font: 11px sans-serif;
+  background-image: linear-gradient(to right, #ef9da2 , #9de26f);
 }
 
 .axis path,
@@ -23,6 +24,10 @@ body {
 }
 
 .tooltip {
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  padding-bottom:10px;
   position: absolute;
   width: 200px;
   height: 28px;
@@ -33,9 +38,9 @@ body {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var margin = {top: 50, right: 80, bottom: 80, left: 200},
+    width = 1000 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -45,26 +50,30 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
  */ 
 
 // setup x 
-var xValue = function(d) { return d.Calories;}, // data -> value
-    xScale = d3.scale.linear().range([0, width]), // value -> display
+// COMMENT: We need to make the domain 0 - 1 but I don't know how to do it. 
+// domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
+var xValue = function(d) { return d["Sentiment"];}, // data -> value
+    xScale = d3.scale.linear().range([0, width]).domain([0,1]), // value -> display 
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
-var yValue = function(d) { return d["Protein (g)"];}, // data -> value
-    yScale = d3.scale.linear().range([height, 0]), // value -> display
-    yMap = function(d) { return yScale(yValue(d));}, // data -> display
-    yAxis = d3.svg.axis().scale(yScale).orient("left");
+// COMMENT: var yValue = function(d) { return Math.random();} // returns random y values but map changes on each refresh.
+var yValue = function(d) { return d["Yaxis"];}, // data -> value
+    yScale = d3.scale.linear().domain([10,0]).range([0,300]), // value -> display
+    yMap = function(d) { return yScale(yValue(d));} // data -> display
+    yAxis = d3.svg.axis().scale(yScale).orient("left"); 
+    // COMMENT: pretty sure this is the function that draws the y axis
 
-// setup fill color
-var cValue = function(d) { return d.Manufacturer;},
-    color = d3.scale.category10();
+// setup fill colour
+var cValue = function(d) { return d["Party"];}, 
+    colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
 // add the graph canvas to the body of the webpage
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // add the tooltip area to the webpage
@@ -73,13 +82,12 @@ var tooltip = d3.select("body").append("div")
     .style("opacity", 0);
 
 // load data
-d3.csv("cereal.csv", function(error, data) {
+d3.csv("example.csv", function(error, data) {
 
   // change string (from CSV) into number format
   data.forEach(function(d) {
-    d.Calories = +d.Calories;
-    d["Protein (g)"] = +d["Protein (g)"];
-//    console.log(d);
+    console.log (d)
+    d["Sentiment"] = + d["Sentiment"]
   });
 
   // don't want dots overlapping axis, so add in buffer to data domain
@@ -89,6 +97,7 @@ d3.csv("cereal.csv", function(error, data) {
   // x-axis
   svg.append("g")
       .attr("class", "x axis")
+      .attr("fill", "white") 
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis)
     .append("text")
@@ -96,11 +105,12 @@ d3.csv("cereal.csv", function(error, data) {
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
-      .text("Calories");
+      .text("Sentiment");
 
   // y-axis
   svg.append("g")
       .attr("class", "y axis")
+      .attr("fill", "white") // COMMENT: made it invisible
       .call(yAxis)
     .append("text")
       .attr("class", "label")
@@ -108,25 +118,28 @@ d3.csv("cereal.csv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Protein (g)");
+      .text("");
 
   // draw dots
   svg.selectAll(".dot")
       .data(data)
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", 3.5)
+      .attr("r", 5)
       .attr("cx", xMap)
       .attr("cy", yMap)
-      .style("fill", function(d) { return color(cValue(d));}) 
+      .style("fill", function(d) { return colour(cValue(d));}) 
       .on("mouseover", function(d) {
+          
           tooltip.transition()
                .duration(200)
                .style("opacity", .9);
-          tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
-            + ", " + yValue(d) + ")")
+          tooltip.html("@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")") 
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
+
+
+
       })
       .on("mouseout", function(d) {
           tooltip.transition()
@@ -136,17 +149,17 @@ d3.csv("cereal.csv", function(error, data) {
 
   // draw legend
   var legend = svg.selectAll(".legend")
-      .data(color.domain())
-    .enter().append("g")
+      .data(colour.domain())
+      .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-  // draw legend colored rectangles
+  // draw legend coloured rectangles
   legend.append("rect")
       .attr("x", width - 18)
       .attr("width", 18)
       .attr("height", 18)
-      .style("fill", color);
+      .style("fill", colour);
 
   // draw legend text
   legend.append("text")

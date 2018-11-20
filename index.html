@@ -32,13 +32,12 @@ body {
 }
 </style>
 <body>
+<div id="scatterplot"></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
 
 var margin = {top: 50, right: 80, bottom: 80, left: 200};
-    width = 1500 - margin.left - margin.right,
-    height = 700 - margin.top - margin.bottom;
 
 var w = window.innerWidth - window.innerWidth / 3;
 var h = window.innerHeight - window.innerHeight / 4;
@@ -76,12 +75,23 @@ var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
 var cValue = function(d) { return d["Party"];}, 
     colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
+
 // add the graph canvas to the body of the webpage
-var svg = d3.select("body").append("svg")
-    .attr("width", w + margin.left + margin.right)
+var svg = d3.select("#scatterplot").append("svg");
+
+var graphSvg = svg.attr("width", w + margin.left + margin.right)
     .attr("height", h + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+/* No matter how tall I make it, it stays the same height :( there's some invisible
+cutoff where it can appear for some reason...*/
+svg.append("rect")
+      .attr("width", w / 5.4)
+      .attr("height", h/5)
+      .attr("x", 0)
+      .attr("y", window.innerHeight - 100)
+      .style("fill", "white");
 
 // add the tooltip area to the webpage
 var tooltip = d3.select("body").append("div")
@@ -100,7 +110,7 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
   xScale.domain([-1, 1]);
 
   // x-axis
-  svg.append("g")
+  graphSvg.append("g")
       .attr("class", "x axis")
       .attr("fill", "white") 
       .attr("transform", "translate(0," + h + ")")
@@ -113,7 +123,7 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .text("Sentiment");
 
   // draw dots
-  svg.selectAll(".dot")
+  graphSvg.selectAll(".dot")
       .data(data)
     .enter().append("circle")
       .attr("class", "dot")

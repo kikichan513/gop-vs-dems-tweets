@@ -28,6 +28,7 @@ with open("data.csv", 'a', newline='') as newcsv:
         ea = EmotionAnalyzer()
         csvreader = csv.reader(f, delimiter=',')
         for party, handle, tweet in csvreader:
+            
             tweet_sentiment = ea.analyze_corpus(tweet)
             writer.writerow([party, handle, tweet, tweet_sentiment])
 

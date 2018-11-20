@@ -126,6 +126,12 @@ buttons.append("rect")
       .attr("width", w/ 8)
       .attr("height", h / 15)
       .style("opacity", .8)
+      .on('mouseover', function(d, i) {
+        d3.select(this).style("fill", "#EAEAEA");
+      })
+      .on('mouseout', function(d, i) {
+        d3.select(this).style('fill', "white");
+      })
       .style("fill", "white");
 
 buttons.append("text")
@@ -140,6 +146,12 @@ buttons.append("rect")
       .attr("width", w/ 8)
       .attr("height", h / 15)
       .style("opacity", .8)
+      .on('mouseover', function(d, i) {
+          d3.select(this).style("fill", "#EAEAEA");
+        })
+      .on('mouseout', function(d, i) {
+          d3.select(this).style('fill', "white");
+      })
       .style("fill", "white");
 
 buttons.append("text")
@@ -154,6 +166,12 @@ buttons.append("rect")
       .attr("width", w / 8)
       .attr("height", h / 15)
       .style("opacity", .8)
+      .on('mouseover', function(d, i) {
+          d3.select(this).style("fill", "#EAEAEA");
+        })
+      .on('mouseout', function(d, i) {
+          d3.select(this).style('fill', "white");
+      })
       .style("fill", "white");
 
 buttons.append("text")
@@ -168,6 +186,12 @@ buttons.append("rect")
       .attr("width", w / 8)
       .attr("height", h / 15)
       .style("opacity", .8)
+      .on('mouseover', function(d, i) {
+          d3.select(this).style("fill", "#EAEAEA");
+        })
+      .on('mouseout', function(d, i) {
+          d3.select(this).style('fill', "white");
+      })
       .style("fill", "white");
 
 buttons.append("text")
@@ -182,7 +206,13 @@ buttons.append("rect")
       .attr("width", w / 8)
       .attr("height", h / 15)
       .style("fill", "#ff4040")
-      .style("opacity", .8);
+      .on('mouseover', function(d, i) {
+        d3.select(this).style('fill-opacity', 1);
+      })
+      .on('mouseout', function(d, i) {
+        d3.select(this).style('fill-opacity', .7);
+      })
+      .style("opacity", .7);
 
 
 buttons.append("rect")
@@ -191,7 +221,13 @@ buttons.append("rect")
       .attr("width", w / 8)
       .attr("height", h / 15)
       .style("fill", "#0099cc")
-      .style("opacity", .8);
+      .on('mouseover', function(d, i) {
+        d3.select(this).style('fill-opacity', 1);
+      })
+      .on('mouseout', function(d, i) {
+        d3.select(this).style('fill-opacity', .7);
+      })
+      .style("opacity", .7);
 
 
 // add the tooltip area to the webpage

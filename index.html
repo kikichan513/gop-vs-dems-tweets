@@ -111,14 +111,14 @@ var buttons = d3.select("#buttons").append("svg")
     .attr("width", window.innerWidth)
     .attr("height", window.innerHeight)
     
-var buttonbox = buttons.append("rect")
-      .attr("x", 0)
-      .attr("y", window.innerHeight * .93)
-      .attr("width", window.innerWidth)
-      .attr("height", h / 3)
-      .style("background-color", "white")
-      .style("opacity", .5)
-      .style("fill", "white");
+// var buttonbox = buttons.append("rect")
+//       .attr("x", 0)
+//       .attr("y", window.innerHeight * .93)
+//       .attr("width", window.innerWidth)
+//       .attr("height", h / 3)
+//       .style("background-color", "white")
+//       .style("opacity", .5)
+//       .style("fill", "white");
 
 buttons.append("rect")
       .attr("x", w / 2.8)
@@ -205,14 +205,14 @@ buttons.append("rect")
       .attr("y", window.innerHeight * .94)
       .attr("width", w / 8)
       .attr("height", h / 15)
+      .style("fill-opacity", .6)
       .style("fill", "#ff4040")
       .on('mouseover', function(d, i) {
-        d3.select(this).style('fill-opacity', 1);
+        d3.select(this).style('fill-opacity', .8);
       })
       .on('mouseout', function(d, i) {
-        d3.select(this).style('fill-opacity', .7);
-      })
-      .style("opacity", .7);
+        d3.select(this).style('fill-opacity', .6);
+      });
 
 
 buttons.append("rect")
@@ -221,13 +221,13 @@ buttons.append("rect")
       .attr("width", w / 8)
       .attr("height", h / 15)
       .style("fill", "#0099cc")
+      .style("fill-opacity", .6)
       .on('mouseover', function(d, i) {
         d3.select(this).style('fill-opacity', 1);
       })
       .on('mouseout', function(d, i) {
-        d3.select(this).style('fill-opacity', .7);
-      })
-      .style("opacity", .7);
+        d3.select(this).style('fill-opacity', .6);
+      });
 
 
 // add the tooltip area to the webpage

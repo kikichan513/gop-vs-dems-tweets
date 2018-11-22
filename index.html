@@ -40,13 +40,13 @@ svg {
   pointer-events: all;
 }
 
-.btn {
+/*.btn {
     position: absolute;
     left: 0;
     top: 0;
     z-index: 2;
     border-radius: 5px;
-}
+}*/
 
 .graph {
     position: absolute;
@@ -56,12 +56,14 @@ svg {
 }
 
 .d3-tip {
-  border-radius: 5px;
-  padding: 10px;
-  padding-bottom:10px;
-  position: absolute; 
-  pointer-events: none;
-  z-index: 2;
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(192,192,192,0.7);
+  color: #000;
+  border-radius: 2px;
+  width: 150px;
+  z-index: 3;
 }
 
 /* Creates a small triangle extender for the tooltip */
@@ -71,10 +73,20 @@ svg {
   font-size: 10px;
   width: 100%;
   line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(192,192,192,0.7);
+  opacity: .5;
   content: "\25BC";
   position: absolute;
   text-align: center;
+  z-index: 3;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+  z-index: 3;
 }
 
 </style>
@@ -123,7 +135,7 @@ var cValue = function(d) { return d["Party"];},
 
 
 // load data
-d3.csv("example.csv", function(error, data) {
+d3.csv("shuffled-small-data.csv", function(error, data) {
 
   if (error) throw error;
 
@@ -166,11 +178,6 @@ d3.csv("example.csv", function(error, data) {
 
   graphSvg.call(tooltip);
 
-  // background for filtering buttons
-  var buttons = d3.select("#buttons").append("svg")
-      .attr("class", "btn")
-      .attr("width", window.innerWidth)
-      .attr("height", window.innerHeight)
 
   // x-axis
   graphSvg.append("g")
@@ -218,8 +225,6 @@ d3.csv("example.csv", function(error, data) {
       //          .style("opacity", 0);
       // })
 
-  addButtons(buttons);
-
   // function zoom() {
   //     graphSvg.select(".xaxis").call(xAxis);
   //     graphSvg.select(".yaxis").call(yAxis);
@@ -237,7 +242,10 @@ d3.csv("example.csv", function(error, data) {
 
 });
 
-function addButtons(buttons) {
+var buttons = d3.select("#buttons").append("svg")
+      .attr("class", "btn")
+      .attr("width", window.innerWidth)
+      .attr("height", window.innerHeight)
 
   buttons.append("rect")
         .attr("x", w / 2.8)
@@ -347,7 +355,6 @@ function addButtons(buttons) {
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill-opacity', .6);
         });
-}
 
 
 

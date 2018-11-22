@@ -13,11 +13,22 @@ body {
   z-index: 1;
 }
 
+.xaxis line {
+  stroke: #000;
+}
+
+.xaxis path {
+  stroke: #000;
+}
+
+.yaxis {
+  opacity: 0;
+}
 
 .axis path,
 .axis line {
   fill: none;
-  stroke: #fff;
+  stroke: #000;
   shape-rendering: crispEdges;
 }
 
@@ -26,14 +37,6 @@ body {
   pointer-events: all;
 }
 
-.tooltip {
-  border-radius: 5px;
-  padding: 10px;
-  padding-bottom:10px;
-  position: absolute; 
-  pointer-events: none;
-  z-index: 2;
-}
 
 svg {
   overflow: visible;
@@ -91,8 +94,8 @@ svg {
 <body>
 <div id="plot"></div>
 <div id="buttons"></div>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script src="http://d3js.org/d3.v4.min.js"></script>
+<script src="d3-tip.js"></script>
 
 <script>
 
@@ -118,13 +121,13 @@ var funhash=function(s) {
 // setup x 
 // domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
 var xValue = function(d) { return d["Sentiment"];}, // data -> value
-    xScale = d3.scale.linear().range([0,w]), // value -> display 
+    xScale = d3.scaleLinear().range([0,w]), // value -> display 
     xMap = function(d) { return xScale(xValue(d));}; // data -> display
    
 
 // setup y
 var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
-    yScale = d3.scale.linear().range([0,h]), // value -> display
+    yScale = d3.scaleLinear().range([0, h]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}; // data -> display
   
 // setup fill colour
@@ -145,9 +148,104 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
   yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
   xScale.domain([-1, 1]);
 
-  var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-  var yAxis = d3.svg.axis().scale(yScale).orient("left");
+  var xAxis = d3.axisBottom(xScale).ticks(5);
+  var yAxis = d3.axisLeft(yScale);
 
+  // var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
+  //         idleTimeout,
+  //         idleDelay = 350;
+
+  var tooltip = d3.tip()
+      .attr("class", "d3-tip")
+      .offset([-10, 0])
+      .html(function(d) {
+        return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
+      });
+
+  // add the graph canvas to the body of the webpage
+  var graphSvg = d3.select("svg")
+      .attr("class", "graph")
+      .attr("width", w + margin.left + margin.right)
+      .attr("height", h + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      // .attr("clip-path", "url(#clip)");
+      // .call(zoomBeh);
+
+  var clip = graphSvg.append("defs").append("clipPath")
+      .attr("id", "clip")
+      .append("rect")
+      .attr("width", w)
+      .attr("height", h)
+      .attr("x", 0) 
+      .attr("y", 0); 
+
+  graphSvg.call(tooltip);
+
+  // x-axis
+  graphSvg.append("g")
+      .attr("class", "xaxis axis")
+      .attr("transform", "translate(0," + h + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", w)
+      .attr("y", -6)
+      .attr("fill", "black") 
+      .style("text-anchor", "start")
+      .text("Sentiment");
+
+  graphSvg.append("g")
+      .attr("class", "yaxis")
+      .attr("fill-opacity", 0)
+      .call(yAxis);
+
+
+   // graphSvg.append("g")
+   //          .attr("class", "brush")
+   //          .call(brush);
+
+
+  // draw dots
+  graphSvg.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 5)
+      .attr("cx", function(d) {
+        if (xMap(d)) {
+          return xMap(d);
+        } else {
+          return 0;
+        }
+      })
+      .attr("cy", yMap)
+      .style("opacity", .5)
+      .style("fill", function(d) { return colour(cValue(d));}) 
+      .on("mouseover", tooltip.show)
+      .on("mouseout", tooltip.hide);
+
+  // function zoom() {
+  //   console.log("zoom zoom bitch");
+  //     graphSvg.select(".xaxis").call(xAxis);
+  //     graphSvg.select(".yaxis").call(yAxis);
+
+  //     graphSvg.selectAll(".dot")
+  //         .attr("transform", transform);
+  // }
+
+  // function transform(d) {
+  //   x = null;
+  //   if (xMap(d)) {
+  //     x = xMap(d);
+  //   } else {
+  //     x = 0;
+  //   }
+  //   // console.log(d["Tweet"]);
+  //   // console.log(yValue(d));
+  //   // console.log(yScale(yValue(d)));
+  //   return "translate(" + x + "," + yValue(d) + ")";
+  // }
   function brushended() {
 
             var s = d3.event.selection;
@@ -179,105 +277,6 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
         }
 
 
-
-  var brush = d3.svg.brush().extent([[0, 0], [w, h]]).on("end", brushended),
-          idleTimeout,
-          idleDelay = 350;
-
-  
-  var clip = svg.append("defs").append("clipPath")
-      .attr("id", "clip")
-      .append("rect")
-      .attr("width", w)
-      .attr("height", h)
-      .attr("x", 0) 
-      .attr("y", 0); 
-
-
-  var tooltip = d3.tip()
-      .attr("class", "d3-tip")
-      .offset([-10, 0])
-      .html(function(d) {
-        return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
-      });
-
-  // add the graph canvas to the body of the webpage
-  var graphSvg = d3.select("#plot").append("svg")
-      .attr("class", "graph")
-      .attr("width", w + margin.left + margin.right)
-      .attr("height", h + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      .attr("clip-path", "url(#clip)");
-      // .call(zoomBeh);
-
-
-  graphSvg.call(tooltip);
-
-
-  // x-axis
-  graphSvg.append("g")
-      .attr("class", "xaxis axis")
-      .attr("fill", "white") 
-      .attr("transform", "translate(0," + h + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", w)
-      .attr("y", -6)
-      .style("text-anchor", "start")
-      .text("Sentiment");
-
-  graphSvg.append("g")
-      .attr("class", "yaxis")
-      .attr("fill-opacity", 0)
-      .call(yAxis);
-
-  // draw dots
-  graphSvg.selectAll(".dot")
-      .data(data)
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", 5)
-      .attr("cx", function(d) {
-        if (xMap(d)) {
-          return xMap(d);
-        } else {
-          return 0;
-        }
-      })
-      .attr("cy", yMap)
-      .style("opacity", .5)
-      .style("fill", function(d) { return colour(cValue(d));}) 
-      .on("mouseover", tooltip.show)
-      .on("mouseout", tooltip.hide);
-
-
-   graphSvg.append("g")
-            .attr("class", "brush")
-            .call(brush);
-
-  // function zoom() {
-  //   console.log("zoom zoom bitch");
-  //     graphSvg.select(".xaxis").call(xAxis);
-  //     graphSvg.select(".yaxis").call(yAxis);
-
-  //     graphSvg.selectAll(".dot")
-  //         .attr("transform", transform);
-  // }
-
-  // function transform(d) {
-  //   x = null;
-  //   if (xMap(d)) {
-  //     x = xMap(d);
-  //   } else {
-  //     x = 0;
-  //   }
-  //   // console.log(d["Tweet"]);
-  //   // console.log(yValue(d));
-  //   // console.log(yScale(yValue(d)));
-  //   return "translate(" + x + "," + yValue(d) + ")";
-  // }
 });
 
 var buttons = d3.select("#buttons").append("svg")

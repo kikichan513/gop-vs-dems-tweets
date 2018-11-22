@@ -151,9 +151,9 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
   var xAxis = d3.axisBottom(xScale).ticks(5);
   var yAxis = d3.axisLeft(yScale);
 
-  // var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
-  //         idleTimeout,
-  //         idleDelay = 350;
+  var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
+          idleTimeout,
+          idleDelay = 350;
 
   var tooltip = d3.tip()
       .attr("class", "d3-tip")
@@ -169,16 +169,6 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .attr("height", h + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-      // .attr("clip-path", "url(#clip)");
-      // .call(zoomBeh);
-
-  var clip = graphSvg.append("defs").append("clipPath")
-      .attr("id", "clip")
-      .append("rect")
-      .attr("width", w)
-      .attr("height", h)
-      .attr("x", 0) 
-      .attr("y", 0); 
 
   graphSvg.call(tooltip);
 
@@ -201,9 +191,9 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .call(yAxis);
 
 
-   // graphSvg.append("g")
-   //          .attr("class", "brush")
-   //          .call(brush);
+   graphSvg.append("g")
+            .attr("class", "brush")
+            .call(brush);
 
 
   // draw dots
@@ -222,59 +212,35 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .attr("cy", yMap)
       .style("opacity", .5)
       .style("fill", function(d) { return colour(cValue(d));}) 
-      .on("mouseover", tooltip.show)
+      .on("click", tooltip.show)
       .on("mouseout", tooltip.hide);
 
-  // function zoom() {
-  //   console.log("zoom zoom bitch");
-  //     graphSvg.select(".xaxis").call(xAxis);
-  //     graphSvg.select(".yaxis").call(yAxis);
-
-  //     graphSvg.selectAll(".dot")
-  //         .attr("transform", transform);
-  // }
-
-  // function transform(d) {
-  //   x = null;
-  //   if (xMap(d)) {
-  //     x = xMap(d);
-  //   } else {
-  //     x = 0;
-  //   }
-  //   // console.log(d["Tweet"]);
-  //   // console.log(yValue(d));
-  //   // console.log(yScale(yValue(d)));
-  //   return "translate(" + x + "," + yValue(d) + ")";
-  // }
   function brushended() {
+    var s = d3.event.selection;
+    if (!s) {
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+      xScale.domain(d3.extent(data, xValue)).nice();
+      yScale.domain(d3.extent(data, yValue)).nice();
+    } else {
+      xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+      yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+      graphSvg.select(".brush").call(brush.move, null);
+      }
+    zoom();
+  }
 
-            var s = d3.event.selection;
-            if (!s) {
-                if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
-                xAxis.domain(d3.extent(data, function (d) { return d.x; })).nice();
-                yAxis.domain(d3.extent(data, function (d) { return d.y; })).nice();
-            } else {
-                
-                xAxis.domain([s[0][0], s[1][0]].map(x.invert, x));
-                yAxis.domain([s[1][1], s[0][1]].map(y.invert, y));
-                scatter.select(".brush").call(brush.move, null);
-            }
-            zoom();
-        }
+  function idled() {
+      idleTimeout = null;
+  }
 
-        function idled() {
-            idleTimeout = null;
-        }
-
-        function zoom() {
-
-            var t = scatter.transition().duration(750);
-            svg.select(".xaxis").transition(t).call(xAxis);
-            svg.select(".yaxis").transition(t).call(yAxis);
-            scatter.selectAll(".dot").transition(t)
-            .attr("cx", function (d) { return x(d.x); })
-            .attr("cy", function (d) { return y(d.y); });
-        }
+  function zoom() {
+    var t = graphSvg.transition().duration(750);
+    graphSvg.select(".xaxis").transition(t).call(xAxis);
+    graphSvg.select(".yaxis").transition(t).call(yAxis);
+    graphSvg.selectAll(".dot").transition(t)
+      .attr("cx", xMap)
+      .attr("cy", yMap);
+  }
 
 
 });

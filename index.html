@@ -24,26 +24,46 @@ body {
   stroke: #000;
 }
 
-.tooltip {
-  border-radius: 5px;
-  padding: 10px;
-  padding-bottom:10px;
-  position: absolute; 
-  pointer-events: none;
-  z-index: 2;
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
 }
 
 svg {
   overflow: visible;
 }
 
-.btn {
+/*.btn {
     position: absolute;
     left: 0;
     top: 0;
     z-index: 2;
     border-radius: 5px;
-}
+}*/
 
 .graph {
     position: absolute;
@@ -56,7 +76,7 @@ svg {
 <div id="plot"></div>
 <div id="buttons"></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
 
 var margin = {top: 50, right: 80, bottom: 80, left: 200};
@@ -97,6 +117,13 @@ var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
 var cValue = function(d) { return d["Party"];}, 
     colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
+var tip = d3.tip()
+      .attr("class", "d3-tip")
+      .offset([-10, 0])
+      .html(function(d) {
+        return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
+      });
+
 // add the graph canvas to the body of the webpage
 var graphSvg = d3.select("#plot").append("svg")
     .attr("class", "graph")
@@ -104,6 +131,8 @@ var graphSvg = d3.select("#plot").append("svg")
     .attr("height", h + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+graphSvg.call(tip);
 
 // background for filtering buttons
 var buttons = d3.select("#buttons").append("svg")
@@ -231,12 +260,13 @@ buttons.append("rect")
 
 
 // add the tooltip area to the webpage
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+// var tooltip = d3.select("body").append("div")
+//     .attr("class", "tooltip")
+//     .style("opacity", 0);
+
 
 // load data
-d3.csv("shuffled-small-data.csv", function(error, data) {
+d3.csv("example.csv", function(error, data) {
 
   if (error) throw error;
 
@@ -272,18 +302,11 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .style("opacity", .5)
       .style("fill", function(d) { return colour(cValue(d));}) 
       .on("mouseover", function(d) {
-        tooltip.transition()
-             .duration(200)
-             .style("opacity", .9);
-        tooltip.html("@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")") 
-             .style("left", (d3.event.pageX + 5) + "px")
-             .style("background-color", "#D3D3D3")
-             .style("top", (d3.event.pageY - 28) + "px");
+        console.log(d);
+        tip.show;
       })
       .on("mouseout", function(d) {
-          tooltip.transition()
-               .duration(500)
-               .style("opacity", 0);
+        tip.hide;
       });
 });
 

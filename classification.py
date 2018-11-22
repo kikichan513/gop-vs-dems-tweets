@@ -5,7 +5,7 @@ import csv
 
 class Classification: 
     def __init__(self):
-        self.classification = {"Immigration": ["immigration", "immigrant", "border control", "citizenship", "asylum", "legal" "legal status", "immigration laws", "illegals", "illegal immigrants", "illegal citizens", "undocumented"], "Abortion": ["abortions", "abortion", "born alive", "pro-life", "pro-choice", "choice", "pro choice"], "GunControl":["gun", "control", "gun-control", "NRA", "school shooting", "shooting", "gun violence"]}
+        self.classification = {"Immigration": ["immigration", "immigrant", "border control", "citizenship", "asylum", "legal" "legal status", "immigration laws", "illegals", "illegal immigrants", "illegal citizens", "undocumented"], "Abortion": ["abortions", "abortion", "born alive", "pro-life", "pro-choice", "choice", "pro choice"], "GunControl":["gun", "control", "gun-control", "NRA", "school shooting", "shooting", "gun violence"], "Incarceration":["incarceration", "criminal", "prison", "jail"]}
 
     def classify(self, tweet):
         dic = dict()
@@ -33,13 +33,16 @@ def testscript():
 if __name__ == "__main__":
     with open("classified.csv", 'a', newline='') as newcsv:
         writer = csv.writer(newcsv, delimiter=',')
-        writer.writerow(["Party", "Handle", "Tweet", "Sentiment", "Category"])
+        writer.writerow(["Id","Party", "Handle", "Tweet", "Sentiment", "Category"])
         with open("data.csv", "r") as f:
             issues = Classification();
             csvreader = csv.reader(f, delimiter=',')
+            count = 0
             for party, handle, tweet, tweet_sentiment in csvreader:
                 tweet_category = issues.classify(tweet)
-                if tweet_category:
-                    writer.writerow([party, handle, tweet, tweet_sentiment, tweet_category])
+                if tweet_category and tweet_sentiment != "0.0":
+                    print (tweet_sentiment)
+                    count+=1;
+                    writer.writerow([count, party, handle, tweet, tweet_sentiment, tweet_category])
 
 

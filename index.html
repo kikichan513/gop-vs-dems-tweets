@@ -12,37 +12,29 @@ body {
   background-image: linear-gradient(to right, #ef9da2 , #9de26f);
   z-index: 1;
 }
-
 .xaxis line {
   stroke: #000;
 }
-
 .xaxis path {
   stroke: #000;
 }
-
 .yaxis {
   opacity: 0;
 }
-
 .axis path,
 .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
-
 .dot {
   stroke: #000;
   pointer-events: all;
 }
-
-
 svg {
   overflow: visible;
   pointer-events: all;
 }
-
 /*.btn {
     position: absolute;
     left: 0;
@@ -50,14 +42,12 @@ svg {
     z-index: 2;
     border-radius: 5px;
 }*/
-
 .graph {
     position: absolute;
     left: 0;
     top: 0;
     z-index: 2;
 }
-
 .d3-tip {
   line-height: 1;
   padding: 12px;
@@ -67,7 +57,6 @@ svg {
   width: 150px;
   z-index: 3;
 }
-
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
@@ -81,7 +70,6 @@ svg {
   text-align: center;
   z-index: 3;
 }
-
 /* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
@@ -89,42 +77,36 @@ svg {
   left: 0;
   z-index: 3;
 }
-
 </style>
 <body>
 <div id="plot"></div>
 <div id="buttons"></div>
 <script src="http://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 <script src="d3-tip.js"></script>
 
 <script>
-
 var margin = {top: 50, right: 80, bottom: 80, left: 200},
   w = window.innerWidth - window.innerWidth / 3,
   h = window.innerHeight - window.innerHeight / 4;
-
-
 /* From https://gist.github.com/iperelivskiy/4110988 */
 var funhash=function(s) {
     for(var i=0, h=1; i<s.length; i++)
         h=Math.imul(h+s.charCodeAt(i)|0, 2654435761);
     return (h^h>>>17)>>>0;
 };
-
 /* 
  * value accessor - returns the value to encode for a given data object.
  * scale - maps value to a visual display encoding, such as a pixel position.
  * map function - maps from data value to display value
  * axis - sets up axis
  */ 
-
 // setup x 
 // domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
 var xValue = function(d) { return d["Sentiment"];}, // data -> value
     xScale = d3.scaleLinear().range([0,w]), // value -> display 
     xMap = function(d) { return xScale(xValue(d));}; // data -> display
    
-
 // setup y
 var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
     yScale = d3.scaleLinear().range([0, h]), // value -> display
@@ -133,35 +115,27 @@ var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
 // setup fill colour
 var cValue = function(d) { return d["Party"];}, 
     colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
-
-
 // load data
-d3.csv("shuffled-small-data.csv", function(error, data) {
-
+d3.csv("classified.csv", function(error, data) {
   if (error) throw error;
-
   // change string (from CSV) into number format
   data.forEach(function(d) {
     d["Sentiment"] = + d["Sentiment"];
-  });
 
+  });
   yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
   xScale.domain([-1, 1]);
-
   var xAxis = d3.axisBottom(xScale).ticks(5);
   var yAxis = d3.axisLeft(yScale);
-
   var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
           idleTimeout,
           idleDelay = 350;
-
   var tooltip = d3.tip()
       .attr("class", "d3-tip")
       .offset([-10, 0])
       .html(function(d) {
         return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
       });
-
   // add the graph canvas to the body of the webpage
   var graphSvg = d3.select("svg")
       .attr("class", "graph")
@@ -169,7 +143,6 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .attr("height", h + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
   graphSvg.call(tooltip);
 
   // x-axis
@@ -184,22 +157,19 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .attr("fill", "black") 
       .style("text-anchor", "start")
       .text("Sentiment");
-
   graphSvg.append("g")
       .attr("class", "yaxis")
       .attr("fill-opacity", 0)
       .call(yAxis);
-
-
    graphSvg.append("g")
             .attr("class", "brush")
             .call(brush);
-
-
+  
   // draw dots
   graphSvg.selectAll(".dot")
       .data(data)
-    .enter().append("circle")
+      .enter().append("circle")
+      .attr("id", function(d) { return d["Category"] + d["Tweet"]; })
       .attr("class", "dot")
       .attr("r", 5)
       .attr("cx", function(d) {
@@ -212,8 +182,19 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .attr("cy", yMap)
       .style("opacity", .5)
       .style("fill", function(d) { return colour(cValue(d));}) 
-      .on("click", tooltip.show)
+      .on("mouseover", tooltip.show)
+      .on("click", fadein)
       .on("mouseout", tooltip.hide);
+
+  // logic for fade
+  // make opacity darker
+  // make every other opacity lighter
+  // this dot attribute should have a 'boolean' value that marks whether it is selected to be filtered. 
+
+  function fadein(d){
+    console.log(d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']"))
+    d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']").style("opacity", 1);
+  }
 
   function brushended() {
     var s = d3.event.selection;
@@ -228,11 +209,9 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       }
     zoom();
   }
-
   function idled() {
       idleTimeout = null;
   }
-
   function zoom() {
     var t = graphSvg.transition().duration(750);
     graphSvg.select(".xaxis").transition(t).call(xAxis);
@@ -241,16 +220,17 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .attr("cx", xMap)
       .attr("cy", yMap);
   }
-
-
 });
 
+// https://bl.ocks.org/fabiomainardi/00fd581dc5ba92d99eec
+// http://bl.ocks.org/d3noob/5d621a60e2d1d02086bf
 var buttons = d3.select("#buttons").append("svg")
       .attr("class", "btn")
       .attr("width", window.innerWidth)
       .attr("height", window.innerHeight)
-
+  // Incarceration
   buttons.append("rect")
+        .attr("id", "Incarceration")
         .attr("x", w / 2.8)
         .attr("y", window.innerHeight * .94)
         .attr("width", w/ 8)
@@ -259,23 +239,34 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseover', function(d, i) {
           d3.select(this).style("fill", "#CDCDCD");
         })
+        .on("click", function (d){
+          category = this.id
+          console.log(category)
+          d3.select('.dot[id^="Incarceration"]').style("fill", "black");;
+        })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill', "white");
         })
         .style("fill", "white");
-
   buttons.append("text")
           .text('Incarceration')
           .attr('x', w / 2.6)
           .attr('y', window.innerHeight * .97)
           .attr('fill', 'black');
-
+  // Immigration
   buttons.append("rect")
+        .attr("id", "Immigration")
         .attr("x", w / 2)
         .attr("y", window.innerHeight * .94)
         .attr("width", w/ 8)
         .attr("height", h / 15)
         .style("opacity", .8)
+        .on("click", function (d){
+          category = this.id
+          console.log(category)
+          console.log(d3.select('.dot[id^="Immigration"]'))
+          d3.select('.dot[id^="Immigration"]').style("fill", "black");;
+        })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })
@@ -283,19 +274,25 @@ var buttons = d3.select("#buttons").append("svg")
             d3.select(this).style('fill', "white");
         })
         .style("fill", "white");
-
   buttons.append("text")
           .text('Immigration')
           .attr('x', w / 1.88)
           .attr('y', window.innerHeight * .97)
           .attr('fill', 'black');
-
+  // Abortion
   buttons.append("rect")
+        .attr("id", "Abortion")
         .attr("x", w / 1.55)
         .attr("y", window.innerHeight * .94)
         .attr("width", w / 8)
         .attr("height", h / 15)
         .style("opacity", .8)
+        .on("click", function (d){
+          category = this.id
+          console.log(category)
+          console.log(d3.select('.dot[id^="Abortion"]'))
+          d3.select('.dot[id^="Abortion"]').style("fill", "black");;
+        })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })
@@ -303,14 +300,14 @@ var buttons = d3.select("#buttons").append("svg")
             d3.select(this).style('fill', "white");
         })
         .style("fill", "white");
-
   buttons.append("text")
           .text('Abortion')
           .attr('x', w / 1.47)
           .attr('y', window.innerHeight * .97)
           .attr('fill', 'black');
-
+  // GunControl
   buttons.append("rect")
+        .attr("id", "GunControl")
         .attr("x", w / 1.25)
         .attr("y", window.innerHeight * .94)
         .attr("width", w / 8)
@@ -323,7 +320,6 @@ var buttons = d3.select("#buttons").append("svg")
             d3.select(this).style('fill', "white");
         })
         .style("fill", "white");
-
   buttons.append("text")
           .text('Gun control')
           .attr('x', w / 1.2)
@@ -343,8 +339,6 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill-opacity', .6);
         });
-
-
   buttons.append("rect")
         .attr("x", w * 1.3)
         .attr("y", window.innerHeight * .94)
@@ -358,9 +352,6 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill-opacity', .6);
         });
-
-
-
 </script>
 </body>
 </html>

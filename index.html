@@ -121,6 +121,7 @@ d3.csv("classified.csv", function(error, data) {
   // change string (from CSV) into number format
   data.forEach(function(d) {
     d["Sentiment"] = + d["Sentiment"];
+
   });
   yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
   xScale.domain([-1, 1]);
@@ -143,6 +144,7 @@ d3.csv("classified.csv", function(error, data) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
   graphSvg.call(tooltip);
+
   // x-axis
   graphSvg.append("g")
       .attr("class", "xaxis axis")
@@ -167,6 +169,7 @@ d3.csv("classified.csv", function(error, data) {
   graphSvg.selectAll(".dot")
       .data(data)
       .enter().append("circle")
+      .attr("id", function(d) { return d["Category"] + d["Tweet"]; })
       .attr("class", "dot")
       .attr("r", 5)
       .attr("cx", function(d) {
@@ -180,7 +183,7 @@ d3.csv("classified.csv", function(error, data) {
       .style("opacity", .5)
       .style("fill", function(d) { return colour(cValue(d));}) 
       .on("mouseover", tooltip.show)
-      .on("click", fade)
+      .on("click", fadein)
       .on("mouseout", tooltip.hide);
 
   // logic for fade
@@ -188,10 +191,9 @@ d3.csv("classified.csv", function(error, data) {
   // make every other opacity lighter
   // this dot attribute should have a 'boolean' value that marks whether it is selected to be filtered. 
 
-  function fade(){
-    
-
-
+  function fadein(d){
+    console.log(d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']"))
+    d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']").style("opacity", 1);
   }
 
   function brushended() {
@@ -220,7 +222,7 @@ d3.csv("classified.csv", function(error, data) {
   }
 });
 
-//https://bl.ocks.org/fabiomainardi/00fd581dc5ba92d99eec
+// https://bl.ocks.org/fabiomainardi/00fd581dc5ba92d99eec
 // http://bl.ocks.org/d3noob/5d621a60e2d1d02086bf
 var buttons = d3.select("#buttons").append("svg")
       .attr("class", "btn")
@@ -236,6 +238,11 @@ var buttons = d3.select("#buttons").append("svg")
         .style("opacity", .8)
         .on('mouseover', function(d, i) {
           d3.select(this).style("fill", "#CDCDCD");
+        })
+        .on("click", function (d){
+          category = this.id
+          console.log(category)
+          d3.select('.dot[id^="Incarceration"]').style("fill", "black");;
         })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill', "white");
@@ -254,6 +261,12 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("width", w/ 8)
         .attr("height", h / 15)
         .style("opacity", .8)
+        .on("click", function (d){
+          category = this.id
+          console.log(category)
+          console.log(d3.select('.dot[id^="Immigration"]'))
+          d3.select('.dot[id^="Immigration"]').style("fill", "black");;
+        })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })
@@ -274,6 +287,12 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("width", w / 8)
         .attr("height", h / 15)
         .style("opacity", .8)
+        .on("click", function (d){
+          category = this.id
+          console.log(category)
+          console.log(d3.select('.dot[id^="Abortion"]'))
+          d3.select('.dot[id^="Abortion"]').style("fill", "black");;
+        })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })

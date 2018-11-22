@@ -17,7 +17,7 @@ body {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: #fff;
   shape-rendering: crispEdges;
 }
 
@@ -57,10 +57,9 @@ svg {
 
 .d3-tip {
   line-height: 1;
-  font-weight: bold;
   padding: 12px;
-  background: rgba(192,192,192,0.7);
-  color: #000;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
   border-radius: 2px;
   width: 150px;
   z-index: 3;
@@ -73,8 +72,7 @@ svg {
   font-size: 10px;
   width: 100%;
   line-height: 1;
-  color: rgba(192,192,192,0.7);
-  opacity: .5;
+  color: rgba(0,0,0,0.7);
   content: "\25BC";
   position: absolute;
   text-align: center;
@@ -150,15 +148,51 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
   var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
   var yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-  // var zoomBeh = d3.behavior.zoom()
-  //     .x(xScale)
-  //     .y(yScale)
-  //     .on("zoom", zoom);
+  function brushended() {
 
-  // add the tooltip area to the webpage
-  // var tooltip = d3.select("body").append("div")
-  //     .attr("class", "tooltip")
-  //     .style("opacity", 0);
+            var s = d3.event.selection;
+            if (!s) {
+                if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+                xAxis.domain(d3.extent(data, function (d) { return d.x; })).nice();
+                yAxis.domain(d3.extent(data, function (d) { return d.y; })).nice();
+            } else {
+                
+                xAxis.domain([s[0][0], s[1][0]].map(x.invert, x));
+                yAxis.domain([s[1][1], s[0][1]].map(y.invert, y));
+                scatter.select(".brush").call(brush.move, null);
+            }
+            zoom();
+        }
+
+        function idled() {
+            idleTimeout = null;
+        }
+
+        function zoom() {
+
+            var t = scatter.transition().duration(750);
+            svg.select(".xaxis").transition(t).call(xAxis);
+            svg.select(".yaxis").transition(t).call(yAxis);
+            scatter.selectAll(".dot").transition(t)
+            .attr("cx", function (d) { return x(d.x); })
+            .attr("cy", function (d) { return y(d.y); });
+        }
+
+
+
+  var brush = d3.svg.brush().extent([[0, 0], [w, h]]).on("end", brushended),
+          idleTimeout,
+          idleDelay = 350;
+
+  
+  var clip = svg.append("defs").append("clipPath")
+      .attr("id", "clip")
+      .append("rect")
+      .attr("width", w)
+      .attr("height", h)
+      .attr("x", 0) 
+      .attr("y", 0); 
+
 
   var tooltip = d3.tip()
       .attr("class", "d3-tip")
@@ -173,8 +207,10 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .attr("width", w + margin.left + margin.right)
       .attr("height", h + margin.top + margin.bottom)
       .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .attr("clip-path", "url(#clip)");
       // .call(zoomBeh);
+
 
   graphSvg.call(tooltip);
 
@@ -192,10 +228,10 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
       .style("text-anchor", "start")
       .text("Sentiment");
 
-  // graphSvg.append("g")
-  //     .attr("class", "yaxis")
-  //     .attr("fill-opacity", 0)
-  //     .call(yAxis);
+  graphSvg.append("g")
+      .attr("class", "yaxis")
+      .attr("fill-opacity", 0)
+      .call(yAxis);
 
   // draw dots
   graphSvg.selectAll(".dot")
@@ -203,29 +239,26 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
     .enter().append("circle")
       .attr("class", "dot")
       .attr("r", 5)
-      .attr("cx", xMap)
+      .attr("cx", function(d) {
+        if (xMap(d)) {
+          return xMap(d);
+        } else {
+          return 0;
+        }
+      })
       .attr("cy", yMap)
       .style("opacity", .5)
       .style("fill", function(d) { return colour(cValue(d));}) 
       .on("mouseover", tooltip.show)
       .on("mouseout", tooltip.hide);
-      // .on("mouseover", function(d) {
-      //   console.log("moused over!");
-      //   tooltip.transition()
-      //        .duration(200)
-      //        .style("opacity", .9);
-      //   tooltip.html("@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")") 
-      //        .style("left", (d3.event.pageX + 5) + "px")
-      //        .style("background-color", "#D3D3D3")
-      //        .style("top", (d3.event.pageY - 28) + "px");
-      // })
-      // .on("mouseout", function(d) {
-      //     tooltip.transition()
-      //          .duration(500)
-      //          .style("opacity", 0);
-      // })
+
+
+   graphSvg.append("g")
+            .attr("class", "brush")
+            .call(brush);
 
   // function zoom() {
+  //   console.log("zoom zoom bitch");
   //     graphSvg.select(".xaxis").call(xAxis);
   //     graphSvg.select(".yaxis").call(yAxis);
 
@@ -234,12 +267,17 @@ d3.csv("shuffled-small-data.csv", function(error, data) {
   // }
 
   // function transform(d) {
+  //   x = null;
+  //   if (xMap(d)) {
+  //     x = xMap(d);
+  //   } else {
+  //     x = 0;
+  //   }
   //   // console.log(d["Tweet"]);
   //   // console.log(yValue(d));
   //   // console.log(yScale(yValue(d)));
-  //   return "translate(" + xMap(d) + "," + yValue(d) + ")";
+  //   return "translate(" + x + "," + yValue(d) + ")";
   // }
-
 });
 
 var buttons = d3.select("#buttons").append("svg")

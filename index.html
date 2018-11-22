@@ -70,6 +70,59 @@ var funhash=function(s) {
     return (h^h>>>17)>>>0;
 };
 
+
+// load data
+d3.csv("shuffled-small-data.csv", function(error, data) {
+
+  if (error) throw error;
+
+  // change string (from CSV) into number format
+  data.forEach(function(d) {
+    d["Sentiment"] = + d["Sentiment"];
+  });
+
+  yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
+  xScale.domain([-1, 1]);
+
+  // x-axis
+  graphSvg.append("g")
+      .attr("class", "xaxis axis")
+      .attr("fill", "white") 
+      .attr("transform", "translate(0," + h + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", w)
+      .attr("y", -6)
+      .style("text-anchor", "start")
+      .text("Sentiment");
+
+  // draw dots
+  graphSvg.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 5)
+      .attr("cx", xMap)
+      .attr("cy", yMap)
+      .style("opacity", .5)
+      .style("fill", function(d) { return colour(cValue(d));}) 
+      .on("mouseover", function(d) {
+        tooltip.transition()
+             .duration(200)
+             .style("opacity", .9);
+        tooltip.html("@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")") 
+             .style("left", (d3.event.pageX + 5) + "px")
+             .style("background-color", "#D3D3D3")
+             .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+          tooltip.transition()
+               .duration(500)
+               .style("opacity", 0);
+      });
+});
+
 /* 
  * value accessor - returns the value to encode for a given data object.
  * scale - maps value to a visual display encoding, such as a pixel position.
@@ -97,13 +150,22 @@ var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
 var cValue = function(d) { return d["Party"];}, 
     colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
+
+var zoomBeh = d3.behavior.zoom()
+    .x(xScale)
+    .y(yScale)
+    .scaleExtent([0, 500])
+    .on("zoom", zoom);
+
+
 // add the graph canvas to the body of the webpage
 var graphSvg = d3.select("#plot").append("svg")
     .attr("class", "graph")
     .attr("width", w + margin.left + margin.right)
     .attr("height", h + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .call(zoomBeh);
 
 // background for filtering buttons
 var buttons = d3.select("#buttons").append("svg")
@@ -235,57 +297,17 @@ var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-// load data
-d3.csv("shuffled-small-data.csv", function(error, data) {
+function zoom() {
+    graphSvg.select(".xaxis").call(xAxis);
+    // graphSvg.select(".y.axis").call(yAxis);
 
-  if (error) throw error;
+    graphSvg.selectAll(".dot")
+        .attr("transform", transform);
+}
 
-  // change string (from CSV) into number format
-  data.forEach(function(d) {
-    d["Sentiment"] = + d["Sentiment"];
-  });
-
-  yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
-  xScale.domain([-1, 1]);
-
-  // x-axis
-  graphSvg.append("g")
-      .attr("class", "x axis")
-      .attr("fill", "white") 
-      .attr("transform", "translate(0," + h + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", w)
-      .attr("y", -6)
-      .style("text-anchor", "start")
-      .text("Sentiment");
-
-  // draw dots
-  graphSvg.selectAll(".dot")
-      .data(data)
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", 5)
-      .attr("cx", xMap)
-      .attr("cy", yMap)
-      .style("opacity", .5)
-      .style("fill", function(d) { return colour(cValue(d));}) 
-      .on("mouseover", function(d) {
-        tooltip.transition()
-             .duration(200)
-             .style("opacity", .9);
-        tooltip.html("@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")") 
-             .style("left", (d3.event.pageX + 5) + "px")
-             .style("background-color", "#D3D3D3")
-             .style("top", (d3.event.pageY - 28) + "px");
-      })
-      .on("mouseout", function(d) {
-          tooltip.transition()
-               .duration(500)
-               .style("opacity", 0);
-      });
-});
+function transform(d) {
+  return "translate(" + x(d["Sentiment"]) + "," + y(funhash(d["Tweet"])) + ")";
+}
 
 </script>
 </body>

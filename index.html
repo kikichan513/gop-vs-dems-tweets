@@ -239,8 +239,8 @@ var buttons = d3.select("#buttons").append("svg")
         .style("opacity", .8)
         .on('mouseover', function(d, i) {
           d3.select(this).style("fill", "#CDCDCD");
-        })
-        .on("click", function (d){
+        }) 
+        .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
           category = this.id
           d3.select(".dot[class*='"+ category + "']").style("fill", "black");
         })

@@ -241,7 +241,7 @@ d3.csv("classified.csv", function(error, data) {
   }
 });
 
-
+var clicked = ""
 // https://bl.ocks.org/fabiomainardi/00fd581dc5ba92d99eec
 // http://bl.ocks.org/d3noob/5d621a60e2d1d02086bf
 var buttons = d3.select("#buttons").append("svg")
@@ -261,9 +261,17 @@ var buttons = d3.select("#buttons").append("svg")
         }) 
         .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
           category = this.id
-          var check = d3.selectAll('.dot');
-          console.log(check);
-          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
+          if (clicked != category){
+            d3.selectAll(".dot").filter(function(d) { 
+            console.log(d.Category)
+            return d.Category != category; 
+            }).style("opacity", .2);
+            clicked = category
+          }
+          else {
+            clicked = ""
+            d3.selectAll(".dot").style("opacity", 1);
+          }
         })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill', "white");
@@ -274,6 +282,7 @@ var buttons = d3.select("#buttons").append("svg")
           .attr('x', w / 2.6)
           .attr('y', window.innerHeight * .97)
           .attr('fill', 'black');
+          
   // Immigration
   buttons.append("rect")
         .attr("id", "Immigration")
@@ -282,11 +291,21 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("width", w/ 8)
         .attr("height", h / 15)
         .style("opacity", .8)
-        .on("click", function (d){
+        .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
           category = this.id
-          console.log(category)
-          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
+          if (clicked != category){
+            d3.selectAll(".dot").filter(function(d) { 
+            console.log(d.Category)
+            return d.Category != category; 
+            }).style("opacity", .2);
+            clicked = category
+          }
+          else {
+            clicked = ""
+            d3.selectAll(".dot").style("opacity", 1);
+          }
         })
+    
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })
@@ -308,11 +327,21 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("width", w / 8)
         .attr("height", h / 15)
         .style("opacity", .8)
-        .on("click", function (d){
+        .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
           category = this.id
-          console.log(category)
-          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
+          if (clicked != category){
+            d3.selectAll(".dot").filter(function(d) { 
+            console.log(d.Category)
+            return d.Category != category; 
+            }).style("opacity", .2);
+            clicked = category
+          }
+          else {
+            clicked = ""
+            d3.selectAll(".dot").style("opacity", 1);
+          }
         })
+    
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })
@@ -334,11 +363,21 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("width", w / 8)
         .attr("height", h / 15)
         .style("opacity", .8)
-        .on("click", function (d){
+        .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
           category = this.id
-          console.log(category)
-          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
+          if (clicked != category){
+            d3.selectAll(".dot").filter(function(d) { 
+            console.log(d.Category)
+            return d.Category != category; 
+            }).style("opacity", .2);
+            clicked = category
+          }
+          else {
+            clicked = ""
+            d3.selectAll(".dot").style("opacity", 1);
+          }
         })
+    
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })

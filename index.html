@@ -170,6 +170,7 @@ d3.csv("classified.csv", function(error, data) {
       .data(data)
       .enter().append("circle")
       .attr("id", function(d) { return d["Category"] + d["Tweet"]; })
+      .attr("class", function(d) { return d["Category"]})
       .attr("class", "dot")
       .attr("r", 5)
       .attr("cx", function(d) {
@@ -241,8 +242,7 @@ var buttons = d3.select("#buttons").append("svg")
         })
         .on("click", function (d){
           category = this.id
-          console.log(category)
-          d3.select('.dot[id^="Incarceration"]').style("fill", "black");;
+          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
         })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill', "white");
@@ -264,8 +264,7 @@ var buttons = d3.select("#buttons").append("svg")
         .on("click", function (d){
           category = this.id
           console.log(category)
-          console.log(d3.select('.dot[id^="Immigration"]'))
-          d3.select('.dot[id^="Immigration"]').style("fill", "black");;
+          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
         })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
@@ -279,6 +278,7 @@ var buttons = d3.select("#buttons").append("svg")
           .attr('x', w / 1.88)
           .attr('y', window.innerHeight * .97)
           .attr('fill', 'black');
+
   // Abortion
   buttons.append("rect")
         .attr("id", "Abortion")
@@ -290,8 +290,7 @@ var buttons = d3.select("#buttons").append("svg")
         .on("click", function (d){
           category = this.id
           console.log(category)
-          console.log(d3.select('.dot[id^="Abortion"]'))
-          d3.select('.dot[id^="Abortion"]').style("fill", "black");;
+          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
         })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
@@ -305,6 +304,7 @@ var buttons = d3.select("#buttons").append("svg")
           .attr('x', w / 1.47)
           .attr('y', window.innerHeight * .97)
           .attr('fill', 'black');
+
   // GunControl
   buttons.append("rect")
         .attr("id", "GunControl")
@@ -313,6 +313,11 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("width", w / 8)
         .attr("height", h / 15)
         .style("opacity", .8)
+        .on("click", function (d){
+          category = this.id
+          console.log(category)
+          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
+        })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
           })

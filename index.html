@@ -223,6 +223,7 @@ d3.csv("classified.csv", function(error, data) {
   }
 });
 
+
 // https://bl.ocks.org/fabiomainardi/00fd581dc5ba92d99eec
 // http://bl.ocks.org/d3noob/5d621a60e2d1d02086bf
 var buttons = d3.select("#buttons").append("svg")
@@ -242,7 +243,9 @@ var buttons = d3.select("#buttons").append("svg")
         }) 
         .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
           category = this.id
-          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
+          var check = d3.selectAll('.dot');
+          console.log(check);
+          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
         })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill', "white");
@@ -264,7 +267,7 @@ var buttons = d3.select("#buttons").append("svg")
         .on("click", function (d){
           category = this.id
           console.log(category)
-          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
+          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
         })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
@@ -290,7 +293,7 @@ var buttons = d3.select("#buttons").append("svg")
         .on("click", function (d){
           category = this.id
           console.log(category)
-          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
+          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
         })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");
@@ -316,7 +319,7 @@ var buttons = d3.select("#buttons").append("svg")
         .on("click", function (d){
           category = this.id
           console.log(category)
-          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
+          d3.selectAll(".dot[id^='"+ category + "']").style("fill", "black");
         })
         .on('mouseover', function(d, i) {
             d3.select(this).style("fill", "#CDCDCD");

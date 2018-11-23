@@ -182,7 +182,7 @@ d3.csv("classified.csv", function(error, data) {
   scatter.selectAll(".dot")
       .data(data)
       .enter().append("circle")
-      .attr("id", function(d) { return d["Category"] + d["Tweet"]; })
+      .attr("id", function(d) { return d["Category"]; })
       .attr("class", function(d) { return d["Category"]})
       .attr("class", "dot")
       .attr("r", 5)
@@ -194,7 +194,7 @@ d3.csv("classified.csv", function(error, data) {
         }
       })
       .attr("cy", yMap)
-      .style("opacity", .5)
+      .style("opacity", .8)
       .style("fill", function(d) { return colour(cValue(d));}) 
       .on("mouseover", tooltip.show)
       .on("click", fadein)
@@ -260,7 +260,15 @@ var buttons = d3.select("#buttons").append("svg")
         }) 
         .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
           category = this.id
-          d3.select(".dot[class*='"+ category + "']").style("fill", "black");
+          d3.selectAll(".dot")
+          .style("opacity", 0.2);
+
+          d3.selectAll(".dot")
+          .filter(function(d) { 
+            console.log(d);
+            return d.data.id === category; })
+          .style("opacity", .8);
+          // d3.select(".dot[class*='"+ category + "']").style("fill", "black");
         })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill', "white");

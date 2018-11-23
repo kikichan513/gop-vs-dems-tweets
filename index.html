@@ -255,15 +255,18 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("y", window.innerHeight * .94)
         .attr("width", w/ 8)
         .attr("height", h / 15)
-        .style("opacity", .8)
+        .attr("fill", "#ffffff")
+        .attr("fill-opacity", .6)
         .on('mouseover', function(d, i) {
-          d3.select(this).style("fill", "#CDCDCD");
+          d3.select(this).style('fill-opacity', 1);
         }) 
         .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
+          d3.select(this)
+            .style("fill", "#cdcdcd")
+            .style("fill-opacity", .6);
           category = this.id
           if (clicked != category){
             d3.selectAll(".dot").filter(function(d) { 
-            console.log(d.Category)
             return d.Category != category; 
             }).style("opacity", .2);
             clicked = category
@@ -271,10 +274,13 @@ var buttons = d3.select("#buttons").append("svg")
           else {
             clicked = ""
             d3.selectAll(".dot").style("opacity", 1);
+            d3.select(this)
+              .style("fill", "#ffffff")
+              .style("fill-opacity", .6);
           }
         })
         .on('mouseout', function(d, i) {
-          d3.select(this).style('fill', "white");
+          d3.select(this).style('fill-opacity', .6);
         })
         .style("fill", "white");
   buttons.append("text")
@@ -290,12 +296,15 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("y", window.innerHeight * .94)
         .attr("width", w/ 8)
         .attr("height", h / 15)
-        .style("opacity", .8)
+        .attr("fill", "#ffffff")
+        .attr("fill-opacity", .6)
         .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
+          d3.select(this)
+            .style("fill", "#cdcdcd")
+            .style("fill-opacity", .6);
           category = this.id
           if (clicked != category){
             d3.selectAll(".dot").filter(function(d) { 
-            console.log(d.Category)
             return d.Category != category; 
             }).style("opacity", .2);
             clicked = category
@@ -303,14 +312,17 @@ var buttons = d3.select("#buttons").append("svg")
           else {
             clicked = ""
             d3.selectAll(".dot").style("opacity", 1);
+            d3.select(this)
+              .style("fill", "#ffffff")
+              .style("fill-opacity", .6);
           }
         })
     
         .on('mouseover', function(d, i) {
-            d3.select(this).style("fill", "#CDCDCD");
+            d3.select(this).style('fill-opacity', 1);
           })
         .on('mouseout', function(d, i) {
-            d3.select(this).style('fill', "white");
+            d3.select(this).style('fill-opacity', .6);
         })
         .style("fill", "white");
   buttons.append("text")
@@ -324,14 +336,17 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("id", "Abortion")
         .attr("x", w / 1.55)
         .attr("y", window.innerHeight * .94)
+        .attr("fill", "#ffffff")
+        .attr("fill-opacity", .6)
         .attr("width", w / 8)
         .attr("height", h / 15)
-        .style("opacity", .8)
         .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
+          d3.select(this)
+            .style("fill", "#cdcdcd")
+            .style("fill-opacity", .6);
           category = this.id
           if (clicked != category){
             d3.selectAll(".dot").filter(function(d) { 
-            console.log(d.Category)
             return d.Category != category; 
             }).style("opacity", .2);
             clicked = category
@@ -339,14 +354,17 @@ var buttons = d3.select("#buttons").append("svg")
           else {
             clicked = ""
             d3.selectAll(".dot").style("opacity", 1);
+            d3.select(this)
+              .style("fill", "#ffffff")
+              .style("fill-opacity", .6);
           }
         })
     
         .on('mouseover', function(d, i) {
-            d3.select(this).style("fill", "#CDCDCD");
+            d3.select(this).style('fill-opacity', 1);
           })
         .on('mouseout', function(d, i) {
-            d3.select(this).style('fill', "white");
+            d3.select(this).style('fill-opacity', .6);
         })
         .style("fill", "white");
   buttons.append("text")
@@ -362,12 +380,15 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("y", window.innerHeight * .94)
         .attr("width", w / 8)
         .attr("height", h / 15)
-        .style("opacity", .8)
+        .attr("fill", "#ffffff")
+        .attr("fill-opacity", .6)
         .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
+          d3.select(this)
+            .style("fill", "#cdcdcd")
+            .style("fill-opacity", .6);
           category = this.id
           if (clicked != category){
             d3.selectAll(".dot").filter(function(d) { 
-            console.log(d.Category)
             return d.Category != category; 
             }).style("opacity", .2);
             clicked = category
@@ -375,14 +396,17 @@ var buttons = d3.select("#buttons").append("svg")
           else {
             clicked = ""
             d3.selectAll(".dot").style("opacity", 1);
+            d3.select(this)
+              .style("fill", "#ffffff")
+              .style("fill-opacity", .6);
           }
         })
     
         .on('mouseover', function(d, i) {
-            d3.select(this).style("fill", "#CDCDCD");
+            d3.select(this).style('fill-opacity', 1);
           })
         .on('mouseout', function(d, i) {
-            d3.select(this).style('fill', "white");
+            d3.select(this).style('fill-opacity', .6);
         })
         .style("fill", "white");
   buttons.append("text")
@@ -392,6 +416,7 @@ var buttons = d3.select("#buttons").append("svg")
           .attr('fill', 'black');
 
   buttons.append("rect")
+        .attr("id", "Republican")
         .attr("x", w * 1.15)
         .attr("y", window.innerHeight * .94)
         .attr("width", w / 8)
@@ -401,10 +426,31 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseover', function(d, i) {
           d3.select(this).style('fill-opacity', .8);
         })
+        .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
+          d3.select(this)
+            .style("fill", "#8e0000")
+            .style("fill-opacity", .6);
+          category = this.id
+          if (clicked != category){
+            d3.selectAll(".dot").filter(function(d) { 
+            return d.Party != category; 
+            }).style("opacity", .2);
+            clicked = category
+          }
+          else {
+            clicked = ""
+            d3.selectAll(".dot").style("opacity", 1);
+            d3.select(this)
+              .style("fill", "#ff4040")
+              .style("fill-opacity", .6);
+          }
+        })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill-opacity', .6);
         });
+
   buttons.append("rect")
+        .attr("id", "Democrat")
         .attr("x", w * 1.3)
         .attr("y", window.innerHeight * .94)
         .attr("width", w / 8)
@@ -413,6 +459,25 @@ var buttons = d3.select("#buttons").append("svg")
         .style("fill-opacity", .6)
         .on('mouseover', function(d, i) {
           d3.select(this).style('fill-opacity', 1);
+        })
+        .on("click", function (d){ // COMMENT: STILL DOESN'T WORK
+          d3.select(this)
+            .style("fill", "#006080")
+            .style("fill-opacity", .6);
+          category = this.id
+          if (clicked != category){
+            d3.selectAll(".dot").filter(function(d) { 
+              return d.Party != category; 
+              }).style("opacity", .2);
+            clicked = category
+          }
+          else {
+            clicked = ""
+            d3.selectAll(".dot").style("opacity", 1);
+            d3.select(this)
+              .style("fill", "#0099cc")
+              .style("fill-opacity", .6);
+          }
         })
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill-opacity', .6);

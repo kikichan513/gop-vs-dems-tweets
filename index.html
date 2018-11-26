@@ -26,7 +26,7 @@ body {
 }
 .axis path,
 .axis line {
-  fill: none;
+  
   stroke: #000;
   shape-rendering: crispEdges;
 }
@@ -269,8 +269,11 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("y", window.innerHeight * .94)
         .attr("width", w/ 8)
         .attr("height", h / 15)
-        .style("fill", "#61b3d0")
-        .style("fill-opacity", .6)
+        .attr("fill", "#61b3d0")
+        .attr("fill-opacity", .6)
+        .attr('stroke', '#2378ae')
+        .attr('stroke-width', '3')
+        .attr("rx", 4)
         .on('mouseover', function(d, i) {
           d3.select(this).style('fill-opacity', 1);
         }) 
@@ -296,7 +299,7 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseout', function(d, i) {
           d3.select(this).style('fill-opacity', .6);
         })
-        .style("fill", "white");
+
   buttons.append("text")
           .text('Incarceration')
           .attr('x', w / 2.6)
@@ -310,8 +313,11 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("y", window.innerHeight * .94)
         .attr("width", w/ 8)
         .attr("height", h / 15)
-        .attr("fill", "#61b3d0")
+         .attr("fill", "#61b3d0")
         .attr("fill-opacity", .6)
+        .attr('stroke', '#2378ae')
+        .attr('stroke-width', '3')
+        .attr("rx", 4)
         .on("click", function (d){ 
           d3.select(this)
             .style("fill", "#cdcdcd")
@@ -338,7 +344,6 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseout', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
         })
-        .style("fill", "white");
   buttons.append("text")
           .text('Immigration')
           .attr('x', w / 1.88)
@@ -352,6 +357,9 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("y", window.innerHeight * .94)
         .attr("fill", "#61b3d0")
         .attr("fill-opacity", .6)
+        .attr('stroke', '#2378ae')
+        .attr('stroke-width', '3')
+        .attr("rx", 4)
         .attr("width", w / 8)
         .attr("height", h / 15)
         .on("click", function (d){ 
@@ -380,7 +388,6 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseout', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
         })
-        .style("fill", "white");
   buttons.append("text")
           .text('Abortion')
           .attr('x', w / 1.47)
@@ -396,6 +403,9 @@ var buttons = d3.select("#buttons").append("svg")
         .attr("height", h / 15)
         .attr("fill", "#61b3d0")
         .attr("fill-opacity", .6)
+        .attr('stroke', '#2378ae')
+        .attr('stroke-width', '3')
+        .attr("rx", 4)
         .on("click", function (d){ 
           d3.select(this)
             .style("fill", "#cdcdcd")
@@ -422,7 +432,6 @@ var buttons = d3.select("#buttons").append("svg")
         .on('mouseout', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
         })
-        .style("fill", "white");
   buttons.append("text")
           .text('Gun control')
           .attr('x', w / 1.2)

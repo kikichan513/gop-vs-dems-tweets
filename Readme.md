@@ -12,4 +12,14 @@ https://gist.github.com/weiglemc/6185069
 
 Todos:
 
-- How to seperate issues
+- Select multiple issues show all tweets 
+- Make button colors work
+- Make graph responsive
+- Push buttons up
+- Fix y axis with number of words
+- Redo html tool tips without tool tips
+- Box on the top
+- slider to count tweets 
+- Keep 5% of the 0.0
+- Nice website
+- 

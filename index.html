@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- TODO: Get rid of weird white space below the slider, make slider not move weirdly
+  when page is resized, make buttons/graph responsive to page resize -->
 <html>
 <meta charset="utf-8">
 
@@ -6,7 +8,6 @@
 <!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
 <!-- Coding style based on http://gist.github.com/mbostock/5977197 -->
 <!-- Zoom based on https://bl.ocks.org/EfratVil/d956f19f2e56a05c31fb6583beccfda7 -->
-
 <style>
 body {
   font: 11px sans-serif;
@@ -42,8 +43,17 @@ svg {
 
 .btn {
     position: relative;
-    z-index: 4;
+    z-index: 1;
     border-radius: 5px;
+}
+
+
+#slider-container {
+  height: 25px;
+  width: 85%;
+  /*position: relative;*/
+  margin-top: 53%;
+  margin-left: 6.5%;
 }
 
 #container {
@@ -56,12 +66,13 @@ svg {
   padding-bottom: 30px;
   box-shadow: 0 8px 15px 0 rgba(0, 0, 0, 0.6), 0 6px 30px 0 rgba(0, 0, 0, 0.6);
 }
+
+
 .graph {
     position: absolute;
     left: 0;
     top: 30px;
     bottom: 30px;
-    z-index: 2;
 }
 
 .d3-tip {
@@ -71,7 +82,6 @@ svg {
   color: #fff;
   border-radius: 2px;
   width: 150px;
-  z-index: 3;
 }
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
@@ -84,28 +94,37 @@ svg {
   content: "\25BC";
   position: absolute;
   text-align: center;
-  z-index: 3;
 }
 /* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
-  z-index: 3;
+} 
+
+#range-label {
+  font-size: 2vw;
+  text-align: center;
 }
 </style>
+<link href="slider/d3RangeSlider.css" rel="stylesheet">
 <body>
   <div id="container">
     <div class="graph"></div>
+    <div id="scatterplot"></div>
     <div id="buttons"></div>
-    <div id="slider"></div>
+    <div id="slider-container"></div>
+    <div id="range-label">Democrats: Republicans: </div>
   </div>
 <script src="http://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 <script src="d3-tip.js"></script>
+<script src="buttons.js"></script>
+<script src="slider/d3RangeSlider.js"></script>
+
 
 <script>
-var margin = {top: 75, right: 80, bottom: 80, left: 225},
+var margin = {top: 60, right: 80, bottom: 80, left: 225},
   w = window.innerWidth - window.innerWidth / 3,
   h = window.innerHeight - window.innerHeight / 4;
 /* From https://gist.github.com/iperelivskiy/4110988 */
@@ -135,265 +154,6 @@ var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
 var cValue = function(d) { return d["Party"];}, 
     colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
-var buttons = d3.select("#container").append("svg")
-      .attr("width", window.innerWidth * .8)
-      .attr("height", window.innerHeight * .8);
-
-var clicked = ""
-// http://blockbuilder.org/Ctuauden/52d057254665400f561ef73cb6e5841a
-var buttons = d3.select("#buttons").append("svg")
-      .attr("class", "btn")
-      .attr("width", window.innerWidth * .8)
-      .attr("height", window.innerHeight / 8);
-  // Incarceration
-  buttons.append("rect")
-        .attr("id", "Incarceration")
-        .attr("x", w / 6)
-        .attr("y", window.innerHeight * .02)
-        .attr("width", w/ 8)
-        .attr("height", h / 15)
-        .attr("fill", "#61b3d0")
-        .attr("fill-opacity", .6)
-        .attr('stroke', '#2378ae')
-        .attr('stroke-width', '3')
-        .attr("rx", 4)
-        .on('mouseenter', function(d, i) {
-          d3.select(this).style('fill-opacity', 1);
-        }) 
-        .on("click", function (d){ 
-          d3.select(this)
-            .style("fill", "#cdcdcd")
-            .style("fill-opacity", .6);
-          category = this.id
-          if (clicked != category){
-            d3.selectAll(".dot").filter(function(d) { 
-            return d.Category != category; 
-            }).style("opacity", .2);
-            clicked = category
-          }
-          else {
-            clicked = ""
-            d3.selectAll(".dot").style("opacity", 1);
-            d3.select(this)
-              .style("fill", "#61b3d0")
-              .style("fill-opacity", .6);
-          }
-        })
-        .on('mouseleave', function(d, i) {
-          d3.select(this).style('fill-opacity', .6);
-        });
-
-  buttons.append("text")
-          .text('Incarceration')
-          .attr('x', w / 5.2)
-          .attr('y', window.innerHeight * .05)
-          .attr('fill', 'black');
-          
-  // Immigration
-  buttons.append("rect")
-        .attr("id", "Immigration")
-        .attr("x", w / 3.1)
-        .attr("y", window.innerHeight * .02)
-        .attr("width", w/ 8)
-        .attr("height", h / 15)
-         .attr("fill", "#61b3d0")
-        .attr("fill-opacity", .6)
-        .attr('stroke', '#2378ae')
-        .attr('stroke-width', '3')
-        .attr("rx", 4)
-        .on("click", function (d){ 
-          d3.select(this)
-            .style("fill", "#cdcdcd")
-            .style("fill-opacity", .6);
-          category = this.id
-          if (clicked != category){
-            d3.selectAll(".dot").filter(function(d) { 
-            return d.Category != category; 
-            }).style("opacity", .2);
-            clicked = category
-          }
-          else {
-            clicked = ""
-            d3.selectAll(".dot").style("opacity", 1);
-            d3.select(this)
-              .style("fill", "#61b3d0")
-              .style("fill-opacity", .6);
-          }
-        })
-    
-        .on('mouseover', function(d, i) {
-            d3.select(this).style('fill-opacity', 1);
-          })
-        .on('mouseout', function(d, i) {
-            d3.select(this).style('fill-opacity', .6);
-        });
-
-  buttons.append("text")
-          .text('Immigration')
-          .attr('x', w / 2.8)
-          .attr('y', window.innerHeight * .05)
-          .attr('fill', 'black');
-
-  // Abortion
-  buttons.append("rect")
-        .attr("id", "Abortion")
-        .attr("x", w / 2.08)
-        .attr("y", window.innerHeight * .02)
-        .attr("fill", "#61b3d0")
-        .attr("fill-opacity", .6)
-        .attr('stroke', '#2378ae')
-        .attr('stroke-width', '3')
-        .attr("rx", 4)
-        .attr("width", w / 8)
-        .attr("height", h / 15)
-        .on("click", function (d){ 
-          d3.select(this)
-            .style("fill", "#cdcdcd")
-            .style("fill-opacity", .6);
-          category = this.id
-          if (clicked != category){
-            d3.selectAll(".dot").filter(function(d) { 
-            return d.Category != category; 
-            }).style("opacity", .2);
-            clicked = category
-          }
-          else {
-            clicked = ""
-            d3.selectAll(".dot").style("opacity", 1);
-            d3.select(this)
-              .style("fill", "#61b3d0")
-              .style("fill-opacity", .6);
-          }
-        })
-        .on('mouseover', function(d, i) {
-            d3.select(this).style('fill-opacity', 1);
-          })
-        .on('mouseout', function(d, i) {
-            d3.select(this).style('fill-opacity', .6);
-        });
-
-  buttons.append("text")
-          .text('Abortion')
-          .attr('x', w / 1.93)
-          .attr('y', window.innerHeight * .05)
-          .attr('fill', 'black');
-
-  // GunControl
-  buttons.append("rect")
-        .attr("id", "GunControl")
-        .attr("x", w / 1.56)
-        .attr("y", window.innerHeight * .02)
-        .attr("width", w / 8)
-        .attr("height", h / 15)
-        .attr("fill", "#61b3d0")
-        .attr("fill-opacity", .6)
-        .attr('stroke', '#2378ae')
-        .attr('stroke-width', '3')
-        .attr("rx", 4)
-        .on("click", function (d){ 
-          d3.select(this)
-            .style("fill", "#cdcdcd")
-            .style("fill-opacity", .6);
-          category = this.id
-          if (clicked != category){
-            d3.selectAll(".dot").filter(function(d) { 
-            return d.Category != category; 
-            }).style("opacity", .2);
-            clicked = category
-          }
-          else {
-            clicked = ""
-            d3.selectAll(".dot").style("opacity", 1);
-            d3.select(this)
-              .style("fill", "#61b3d0")
-              .style("fill-opacity", .6);
-          }
-        })
-    
-        .on('mouseover', function(d, i) {
-            d3.select(this).style('fill-opacity', 1);
-          })
-        .on('mouseout', function(d, i) {
-            d3.select(this).style('fill-opacity', .6);
-        });
-  buttons.append("text")
-          .text('Gun control')
-          .attr('x', w / 1.49)
-          .attr('y', window.innerHeight * .05)
-          .attr('fill', 'black');
-
-  buttons.append("rect")
-        .attr("id", "Republican")
-        .attr("x", w * .87)
-        .attr("y", window.innerHeight * .02)
-        .attr("width", w / 8)
-        .attr("height", h / 15)
-        .style("fill-opacity", .6)
-        .style("fill", "#ff4040")
-        .attr("rx", 20)
-        .attr("ry", 20)
-        .on('mouseover', function(d, i) {
-          d3.select(this).style('fill-opacity', .8);
-        })
-        .on("click", function (d){
-          d3.select(this)
-            .style("fill", "#8e0000")
-            .style("fill-opacity", .6);
-          category = this.id
-          if (clicked != category){
-            d3.selectAll(".dot").filter(function(d) { 
-            return d.Party != category; 
-            }).style("opacity", .2);
-            clicked = category
-          }
-          else {
-            clicked = ""
-            d3.selectAll(".dot").style("opacity", 1);
-            d3.select(this)
-              .style("fill", "#ff4040")
-              .style("fill-opacity", .6);
-          }
-        })
-        .on('mouseout', function(d, i) {
-          d3.select(this).style('fill-opacity', .6);
-        });
-
-  buttons.append("rect")
-        .attr("id", "Democrat")
-        .attr("x", w)
-        .attr("y", window.innerHeight * .02)
-        .attr("width", w / 8)
-        .attr("height", h / 15)
-        .style("fill", "#0099cc")
-        .style("fill-opacity", .6)
-        .attr("rx", 20)
-        .attr("ry", 20)
-        .on('mouseover', function(d, i) {
-          d3.select(this).style('fill-opacity', 1);
-        })
-        .on("click", function (d){ 
-          d3.select(this)
-            .style("fill", "#006080")
-            .style("fill-opacity", .6);
-          category = this.id
-          if (clicked != category){
-            d3.selectAll(".dot").filter(function(d) { 
-              return d.Party != category; 
-              }).style("opacity", .2);
-            clicked = category
-          }
-          else {
-            clicked = ""
-            d3.selectAll(".dot").style("opacity", 1);
-            d3.select(this)
-              .style("fill", "#0099cc")
-              .style("fill-opacity", .6);
-          }
-        })
-        .on('mouseout', function(d, i) {
-          d3.select(this).style('fill-opacity', .6);
-        });
-
 // load data
 d3.csv("classified.csv", function(error, data) {
   if (error) throw error;
@@ -416,7 +176,7 @@ d3.csv("classified.csv", function(error, data) {
         return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
       });
   // add the graph canvas to the body of the webpage
-  var graphSvg = d3.select("body").append("svg")
+  var graphSvg = d3.select("#scatterplot").append("svg")
       .attr("class", "graph")
       .attr("width", w + margin.left + margin.right)
       .attr("height", h + margin.top + margin.bottom)
@@ -478,10 +238,10 @@ d3.csv("classified.csv", function(error, data) {
       .on("click", fadein)
       .on("mouseout", tooltip.hide);
 
-
   scatter.append("g")
             .attr("class", "brush")
             .call(brush);
+
 
   // logic for fade
   // make opacity darker
@@ -518,6 +278,26 @@ d3.csv("classified.csv", function(error, data) {
       .attr("cy", yMap);
   }
 });
+
+
+var slider = createD3RangeSlider(-1000, 1000, "#slider-container");
+
+slider.onChange(function(newRange){
+      var lower = newRange.begin * .001;
+      var upper = newRange.end * .001;
+      var dems = d3.selectAll(".dot")
+        .filter(function(d) { 
+            return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
+          })
+        .size();
+      var gop = d3.selectAll(".dot")
+        .filter(function(d) { 
+          return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
+          })
+        .size();
+      d3.select("#range-label").text("Democrats: " + dems + " Republicans: " + gop);
+});
+
 
 </script>
 </body>

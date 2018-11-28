@@ -56,6 +56,9 @@ svg {
     border-radius: 5px;
 }
 
+#buttons {
+  position: relative;
+}
 
 #slider-container {
   height: 25px;
@@ -73,6 +76,7 @@ svg {
   margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 30px;
+  right: 0px;
   box-shadow: 0 8px 15px 0 rgba(0, 0, 0, 0.6), 0 6px 30px 0 rgba(0, 0, 0, 0.6);
 }
 
@@ -133,160 +137,171 @@ svg {
 
 
 <script>
-var margin = {top: 60, right: 80, bottom: 80, left: 225},
-  w = window.innerWidth - window.innerWidth / 3,
-  h = window.innerHeight - window.innerHeight / 4;
-/* From https://gist.github.com/iperelivskiy/4110988 */
+
 var funhash=function(s) {
     for(var i=0, h=1; i<s.length; i++)
         h=Math.imul(h+s.charCodeAt(i)|0, 2654435761);
     return (h^h>>>17)>>>0;
 };
-/* 
- * value accessor - returns the value to encode for a given data object.
- * scale - maps value to a visual display encoding, such as a pixel position.
- * map function - maps from data value to display value
- * axis - sets up axis
- */ 
-// setup x 
-// domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
-var xValue = function(d) { return d["Sentiment"];}, // data -> value
-    xScale = d3.scaleLinear().range([0,w]), // value -> display 
-    xMap = function(d) { return xScale(xValue(d));}; // data -> display
-   
-// setup y
-var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
-    yScale = d3.scaleLinear().range([0, h]), // value -> display
-    yMap = function(d) { return yScale(yValue(d));}; // data -> display
-  
-// setup fill colour
-var cValue = function(d) { return d["Party"];}, 
-    colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
-// load data
-d3.csv("classified.csv", function(error, data) {
-  if (error) throw error;
-  // change string (from CSV) into number format
-  data.forEach(function(d) {
-    d["Sentiment"] = + d["Sentiment"];
+function redraw() {
+  d3.selectAll("svg > *").remove();
+  var margin = {top: 60, right: 80, bottom: 80, left: 225},
+    w = window.innerWidth - window.innerWidth / 3,
+    h = window.innerHeight - window.innerHeight / 4;
+  /* From https://gist.github.com/iperelivskiy/4110988 */
 
-  });
-  yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
-  xScale.domain([-1, 1]);
-  var xAxis = d3.axisBottom(xScale).ticks(10);
-  var yAxis = d3.axisLeft(yScale);
-  var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
-          idleTimeout,
-          idleDelay = 350;
-  var tooltip = d3.tip()
-      .attr("class", "d3-tip")
-      .offset([-10, 0])
-      .html(function(d) {
-        return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
-      });
-  // add the graph canvas to the body of the webpage
-  var graphSvg = d3.select("#scatterplot").append("svg")
-      .attr("class", "graph")
-      .attr("width", w + margin.left + margin.right)
-      .attr("height", h + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  graphSvg.call(tooltip);
+  /* 
+   * value accessor - returns the value to encode for a given data object.
+   * scale - maps value to a visual display encoding, such as a pixel position.
+   * map function - maps from data value to display value
+   * axis - sets up axis
+   */ 
+  // setup x 
+  // domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
+  var xValue = function(d) { return d["Sentiment"];}, // data -> value
+      xScale = d3.scaleLinear().range([0,w]), // value -> display 
+      xMap = function(d) { return xScale(xValue(d));}; // data -> display
+     
+  // setup y
+  var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
+      yScale = d3.scaleLinear().range([0, h]), // value -> display
+      yMap = function(d) { return yScale(yValue(d));}; // data -> display
+    
+  // setup fill colour
+  var cValue = function(d) { return d["Party"];}, 
+      colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
-  var clip = graphSvg.append("defs").append("clipPath")
-          .attr("id", "clip")
-          .append("rect")
-          .attr("width", w)
-          .attr("x", 0) 
-          .attr("y", 0)
-          .attr("transform", "translate(0,-20)") // fixes a bug where 
-          .attr("height", h+20);                // top of scatterplot was cut off
+  // load data
+  d3.csv("classified.csv", function(error, data) {
+    if (error) throw error;
+    // change string (from CSV) into number format
+    data.forEach(function(d) {
+      d["Sentiment"] = + d["Sentiment"];
 
-  var scatter = graphSvg.append("g")
-             .attr("id", "scatterplot")
-             .attr("clip-path", "url(#clip)");
+    });
+    yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
+    xScale.domain([-1, 1]);
+    var xAxis = d3.axisBottom(xScale).ticks(10);
+    var yAxis = d3.axisLeft(yScale);
+    var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
+            idleTimeout,
+            idleDelay = 350;
+    var tooltip = d3.tip()
+        .attr("class", "d3-tip")
+        .offset([-10, 0])
+        .html(function(d) {
+          return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
+        });
+    // add the graph canvas to the body of the webpage
+    var graphSvg = d3.select("#scatterplot").append("svg")
+        .attr("class", "graph")
+        .attr("width", w + margin.left + margin.right)
+        .attr("height", h + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    graphSvg.call(tooltip);
 
-  // x-axis
-  graphSvg.append("g")
-      .attr("class", "xaxis axis")
-      .attr("transform", "translate(0," + h + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", w)
-      .attr("y", -6)
-      .attr("fill", "black") 
-      .style("text-anchor", "start")
-      .text("Sentiment");
+    var clip = graphSvg.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", w)
+            .attr("x", 0) 
+            .attr("y", 0)
+            .attr("transform", "translate(0,-20)") // fixes a bug where 
+            .attr("height", h+20);                // top of scatterplot was cut off
 
-  // y-axis    
-  graphSvg.append("g")
-      .attr("class", "yaxis")
-      .attr("fill-opacity", 0)
-      .call(yAxis);
-  
-  // draw dots
-  scatter.selectAll(".dot")
-      .data(data)
-      .enter().append("circle")
-      .attr("id", function(d) { return d["Category"]; })
-      .attr("class", function(d) { return d["Category"]})
-      .attr("class", "dot")
-      .attr("r", 5)
-      .attr("cx", function(d) {
-        if (xMap(d)) {
-          return xMap(d);
-        } else {
-          return 0;
+    var scatter = graphSvg.append("g")
+               .attr("id", "scatterplot")
+               .attr("clip-path", "url(#clip)");
+
+    // x-axis
+    graphSvg.append("g")
+        .attr("class", "xaxis axis")
+        .attr("transform", "translate(0," + h + ")")
+        .call(xAxis)
+      .append("text")
+        .attr("class", "label")
+        .attr("x", w)
+        .attr("y", -6)
+        .attr("fill", "black") 
+        .style("text-anchor", "start")
+        .text("Sentiment");
+
+    // y-axis    
+    graphSvg.append("g")
+        .attr("class", "yaxis")
+        .attr("fill-opacity", 0)
+        .call(yAxis);
+    
+    // draw dots
+    scatter.selectAll(".dot")
+        .data(data)
+        .enter().append("circle")
+        .attr("id", function(d) { return d["Category"]; })
+        .attr("class", function(d) { return d["Category"]})
+        .attr("class", "dot")
+        .attr("r", 5)
+        .attr("cx", function(d) {
+          if (xMap(d)) {
+            return xMap(d);
+          } else {
+            return 0;
+          }
+        })
+        .attr("cy", yMap)
+        .style("opacity", .8)
+        .style("fill", function(d) { return colour(cValue(d));}) 
+        .on("mouseover", tooltip.show)
+        .on("click", fadein)
+        .on("mouseout", tooltip.hide);
+
+    scatter.append("g")
+              .attr("class", "brush")
+              .call(brush);
+
+
+    // logic for fade
+    // make opacity darker
+    // make every other opacity lighter
+    // this dot attribute should have a 'boolean' value that marks whether it is selected to be filtered. 
+
+    function fadein(d){
+      console.log(d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']"))
+      d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']").style("opacity", 1);
+    }
+
+    function brushended() {
+      var s = d3.event.selection;
+      if (!s) {
+        if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+        xScale.domain(d3.extent(data, xValue)).nice();
+        yScale.domain(d3.extent(data, yValue)).nice();
+      } else {
+        xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+        yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+        graphSvg.select(".brush").call(brush.move, null);
         }
-      })
-      .attr("cy", yMap)
-      .style("opacity", .8)
-      .style("fill", function(d) { return colour(cValue(d));}) 
-      .on("mouseover", tooltip.show)
-      .on("click", fadein)
-      .on("mouseout", tooltip.hide);
+      zoom();
+    }
+    function idled() {
+        idleTimeout = null;
+    }
+    function zoom() {
+      var t = graphSvg.transition().duration(750);
+      graphSvg.select(".xaxis").transition(t).call(xAxis);
+      graphSvg.select(".yaxis").transition(t).call(yAxis);
+      graphSvg.selectAll(".dot").transition(t)
+        .attr("cx", xMap)
+        .attr("cy", yMap);
+    }
+  });
 
-  scatter.append("g")
-            .attr("class", "brush")
-            .call(brush);
+  drawButtons(margin, w, h);
 
+}
 
-  // logic for fade
-  // make opacity darker
-  // make every other opacity lighter
-  // this dot attribute should have a 'boolean' value that marks whether it is selected to be filtered. 
-
-  function fadein(d){
-    console.log(d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']"))
-    d3.select(".dot[id*='"+ d["Category"] + d["Tweet"] + "']").style("opacity", 1);
-  }
-
-  function brushended() {
-    var s = d3.event.selection;
-    if (!s) {
-      if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
-      xScale.domain(d3.extent(data, xValue)).nice();
-      yScale.domain(d3.extent(data, yValue)).nice();
-    } else {
-      xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
-      yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
-      graphSvg.select(".brush").call(brush.move, null);
-      }
-    zoom();
-  }
-  function idled() {
-      idleTimeout = null;
-  }
-  function zoom() {
-    var t = graphSvg.transition().duration(750);
-    graphSvg.select(".xaxis").transition(t).call(xAxis);
-    graphSvg.select(".yaxis").transition(t).call(yAxis);
-    graphSvg.selectAll(".dot").transition(t)
-      .attr("cx", xMap)
-      .attr("cy", yMap);
-  }
-});
+redraw();
 
 
 var slider = createD3RangeSlider(0, 2000, "#slider-container");
@@ -320,6 +335,7 @@ slider.onChange(function(newRange){
       d3.select("#range-label").text("Democrats: " + dems + " Republicans: " + gop);
 });
 
+window.addEventListener("resize", redraw);
 
 </script>
 </body>

@@ -69,10 +69,10 @@ svg {
 
 
 .graph {
-    position: absolute;
-    left: 0;
-    top: 30px;
-    bottom: 30px;
+  position: absolute;
+  left: 0;
+  top: 30px;
+  bottom: 30px;
 }
 
 .d3-tip {
@@ -280,10 +280,23 @@ d3.csv("classified.csv", function(error, data) {
 });
 
 
-var slider = createD3RangeSlider(-1000, 1000, "#slider-container");
+var slider = createD3RangeSlider(0, 2000, "#slider-container");
 
 slider.onChange(function(newRange){
-      var lower = newRange.begin * .001;
+      var lower = 0;
+      var upper = 0;
+      if (newRange.begin < 1000) {
+        lower = newRange.begin * -.0005;
+      } else {
+        lower = newRange.begin * .0005;
+      }
+
+      if (newRange.end < 1000) {
+        upper = newRange.end * -.0005;
+      } else {
+        upper = newRange.end * .0005;
+      }
+      
       var upper = newRange.end * .001;
       var dems = d3.selectAll(".dot")
         .filter(function(d) { 

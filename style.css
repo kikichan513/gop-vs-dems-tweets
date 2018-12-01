@@ -1,0 +1,110 @@
+body {
+  font: 11px sans-serif;
+  z-index: 1;
+  background-color: #38A1F3;
+/*  background-image: linear-gradient(to right, #ef9da2 , #9de26f);*/
+
+}
+.xaxis line {
+  stroke: #000;
+}
+.xaxis path {
+  stroke: #000;
+}
+.yaxis {
+  opacity: 0;
+}
+.axis path,
+.axis line {
+  
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.dot {
+  stroke: #000;
+  pointer-events: all;
+}
+
+svg {
+  overflow: visible;
+  pointer-events: all;
+}
+
+ svg text {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.btn {
+    position: relative;
+    z-index: 1;
+    border-radius: 5px;
+}
+
+#buttons {
+  position: relative;
+}
+
+#slider-container {
+  height: 25px;
+  width: 85%;
+  /*position: relative;*/
+  margin-top: 53%;
+  margin-left: 6.5%;
+}
+
+#container {
+  background-color: white;
+  border-radius: 35px;
+  width: 80%;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 30px;
+  right: 0px;
+  box-shadow: 0 8px 15px 0 rgba(0, 0, 0, 0.6), 0 6px 30px 0 rgba(0, 0, 0, 0.6);
+}
+
+
+.graph {
+  position: absolute;
+  left: 0;
+  top: 30px;
+  bottom: 30px;
+}
+
+.d3-tip {
+  line-height: 1;
+  padding: 12px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  border-radius: 2px;
+  width: 150px;
+}
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0,0,0,0.7);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+} 
+
+#range-label {
+  font-size: 2vw;
+  text-align: center;
+}

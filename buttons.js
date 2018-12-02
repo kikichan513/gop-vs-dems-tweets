@@ -3,7 +3,12 @@ function drawButtons(margin, w, h) {
   //   w = window.innerWidth - window.innerWidth / 3,
   //   h = window.innerHeight - window.innerHeight / 4;
 
-  var clicked = ""
+  function removeByValue(array, value){
+    return array.filter(function(elem, _index){
+        return value != elem;
+    });
+  }
+  var clicked = []
   // http://blockbuilder.org/Ctuauden/52d057254665400f561ef73cb6e5841a
   var buttons = d3.select("#buttons").append("svg")
         .attr("class", "btn")
@@ -11,6 +16,7 @@ function drawButtons(margin, w, h) {
         // .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("width", window.innerWidth * .8)
         .attr("height", window.innerHeight / 8);
+
     // Incarceration
     buttons.append("rect")
           .attr("id", "Incarceration")
@@ -19,34 +25,39 @@ function drawButtons(margin, w, h) {
           .attr("width", w/ 8)
           .attr("height", h / 15)
           .attr("fill", "#61b3d0")
-          .attr("fill-opacity", .6)
+          .attr("fill-opacity", .6)   // ORIGINAL BUTTON .6
           .attr('stroke', '#2378ae')
-          .attr('stroke-width', '3')
+          .attr('stroke-width', '1')
           .attr("rx", 4)
           .on('mouseenter', function(d, i) {
             d3.select(this).style('fill-opacity', 1);
           }) 
-          .on("click", function (d){ 
-            d3.select(this)
-              .style("fill", "#cdcdcd")
-              .style("fill-opacity", .6);
-            category = this.id
-            if (clicked != category){
-              d3.selectAll(".dot").filter(function(d) { 
-              return d.Category != category; 
-              }).style("opacity", .2);
-              clicked = category
-            }
-            else {
-              clicked = ""
-              d3.selectAll(".dot").style("opacity", 1);
-              d3.select(this)
-                .style("fill", "#61b3d0")
-                .style("fill-opacity", .6);
-            }
-          })
           .on('mouseleave', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
+          })
+          .on("click", function (d){ 
+            // TODO: Make sure button is shaded dark when pressed. Doesn't work at the moment
+            d3.select(this).style('fill-opacity', 1);
+
+            category = this.id;  
+            if (!clicked.includes(category)){ // havent been clicked before
+              clicked.push(category);
+
+              d3.selectAll(".dot").style("opacity", .8);
+
+              d3.selectAll(".dot").filter( d => {
+                return !clicked.includes(d.Category) }).style("opacity", .2);
+            }
+            else { 
+              clicked = removeByValue(clicked,category)
+              if (clicked.length){
+                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
+              }
+              if (!clicked.length){
+                d3.selectAll(".dot").style("opacity", .8);
+              }
+            }
+            
           });
 
     buttons.append("text")
@@ -62,36 +73,40 @@ function drawButtons(margin, w, h) {
           .attr("y", window.innerHeight * .02)
           .attr("width", w/ 8)
           .attr("height", h / 15)
-           .attr("fill", "#61b3d0")
-          .attr("fill-opacity", .6)
+          .attr("fill", "#61b3d0")
+          .attr("fill-opacity", .6)  // ORIGINAL BUTTON .6
           .attr('stroke', '#2378ae')
-          .attr('stroke-width', '3')
+          .attr('stroke-width', '1')
           .attr("rx", 4)
-          .on("click", function (d){ 
-            d3.select(this)
-              .style("fill", "#cdcdcd")
-              .style("fill-opacity", .6);
-            category = this.id
-            if (clicked != category){
-              d3.selectAll(".dot").filter(function(d) { 
-              return d.Category != category; 
-              }).style("opacity", .2);
-              clicked = category
-            }
-            else {
-              clicked = ""
-              d3.selectAll(".dot").style("opacity", 1);
-              d3.select(this)
-                .style("fill", "#61b3d0")
-                .style("fill-opacity", .6);
-            }
+          .on('mouseenter', function(d, i) {
+            d3.select(this).style('fill-opacity', 1);
+          }) 
+          .on('mouseleave', function(d, i) {
+            d3.select(this).style('fill-opacity', .6);
           })
-      
-          .on('mouseover', function(d, i) {
-              d3.select(this).style('fill-opacity', 1);
-            })
-          .on('mouseout', function(d, i) {
-              d3.select(this).style('fill-opacity', .6);
+          .on("click", function (d){ 
+            d3.select(this).style("fill-opacity", 1);
+
+            category = this.id
+            if (!clicked.includes(category)){ 
+              
+              d3.selectAll(".dot").style("opacity", .8);
+
+              clicked.push(category);
+
+              d3.selectAll(".dot").filter( d => {
+                return !clicked.includes(d.Category) }).style("opacity", .2);
+            }
+            else { 
+              clicked = removeByValue(clicked,category)
+              if (clicked.length){
+                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
+              }
+              if (!clicked.length){
+                d3.selectAll(".dot").style("opacity", .8);
+              }
+            }
+            
           });
 
     buttons.append("text")
@@ -108,34 +123,39 @@ function drawButtons(margin, w, h) {
           .attr("fill", "#61b3d0")
           .attr("fill-opacity", .6)
           .attr('stroke', '#2378ae')
-          .attr('stroke-width', '3')
+          .attr('stroke-width', '1')
           .attr("rx", 4)
           .attr("width", w / 8)
           .attr("height", h / 15)
-          .on("click", function (d){ 
-            d3.select(this)
-              .style("fill", "#cdcdcd")
-              .style("fill-opacity", .6);
-            category = this.id
-            if (clicked != category){
-              d3.selectAll(".dot").filter(function(d) { 
-              return d.Category != category; 
-              }).style("opacity", .2);
-              clicked = category
-            }
-            else {
-              clicked = ""
-              d3.selectAll(".dot").style("opacity", 1);
-              d3.select(this)
-                .style("fill", "#61b3d0")
-                .style("fill-opacity", .6);
-            }
+          .on('mouseenter', function(d, i) {
+            d3.select(this).style('fill-opacity', 1);
+          }) 
+          .on('mouseleave', function(d, i) {
+            d3.select(this).style('fill-opacity', .6);
           })
-          .on('mouseover', function(d, i) {
-              d3.select(this).style('fill-opacity', 1);
-            })
-          .on('mouseout', function(d, i) {
-              d3.select(this).style('fill-opacity', .6);
+          .on("click", function (d){ 
+            d3.select(this).style("fill-opacity", 1);
+
+            category = this.id
+            if (!clicked.includes(category)){ 
+              
+              d3.selectAll(".dot").style("opacity", .8);
+
+              clicked.push(category);
+
+              d3.selectAll(".dot").filter( d => {
+                return !clicked.includes(d.Category) }).style("opacity", .2);
+            }
+            else { 
+              clicked = removeByValue(clicked,category)
+              if (clicked.length){
+                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
+              }
+              if (!clicked.length){
+                d3.selectAll(".dot").style("opacity", .8);
+              }
+            }
+            
           });
 
     buttons.append("text")
@@ -154,34 +174,39 @@ function drawButtons(margin, w, h) {
           .attr("fill", "#61b3d0")
           .attr("fill-opacity", .6)
           .attr('stroke', '#2378ae')
-          .attr('stroke-width', '3')
+          .attr('stroke-width', '1')
           .attr("rx", 4)
-          .on("click", function (d){ 
-            d3.select(this)
-              .style("fill", "#cdcdcd")
-              .style("fill-opacity", .6);
-            category = this.id
-            if (clicked != category){
-              d3.selectAll(".dot").filter(function(d) { 
-              return d.Category != category; 
-              }).style("opacity", .2);
-              clicked = category
-            }
-            else {
-              clicked = ""
-              d3.selectAll(".dot").style("opacity", 1);
-              d3.select(this)
-                .style("fill", "#61b3d0")
-                .style("fill-opacity", .6);
-            }
+          .on('mouseenter', function(d, i) {
+            d3.select(this).style('fill-opacity', 1);
+          }) 
+          .on('mouseleave', function(d, i) {
+            d3.select(this).style('fill-opacity', .6);
           })
-      
-          .on('mouseover', function(d, i) {
-              d3.select(this).style('fill-opacity', 1);
-            })
-          .on('mouseout', function(d, i) {
-              d3.select(this).style('fill-opacity', .6);
+          .on("click", function (d){ 
+            d3.select(this).style("fill-opacity", 1);
+
+            category = this.id
+            if (!clicked.includes(category)){ 
+              
+              d3.selectAll(".dot").style("opacity", .8);
+
+              clicked.push(category);
+
+              d3.selectAll(".dot").filter( d => {
+                return !clicked.includes(d.Category) }).style("opacity", .2);
+            }
+            else { 
+              clicked = removeByValue(clicked,category)
+              if (clicked.length){
+                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
+              }
+              if (!clicked.length){
+                d3.selectAll(".dot").style("opacity", .8);
+              }
+            }
+            
           });
+
     buttons.append("text")
             .text('Gun control')
             .attr('x', w / 1.49)
@@ -224,6 +249,12 @@ function drawButtons(margin, w, h) {
             d3.select(this).style('fill-opacity', .6);
           });
 
+    buttons.append("text")
+            .text('Rep')
+            .attr('x', w / 1.10)
+            .attr('y', window.innerHeight * .05)
+            .attr('fill', 'black');
+
     buttons.append("rect")
           .attr("id", "Democrat")
           .attr("x", w)
@@ -259,4 +290,10 @@ function drawButtons(margin, w, h) {
           .on('mouseout', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
           });
+
+    buttons.append("text")
+            .text('Dem')
+            .attr('x', w / .95)
+            .attr('y', window.innerHeight * .05)
+            .attr('fill', 'black');
 }

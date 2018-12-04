@@ -63,7 +63,7 @@ function redraw() {
       colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
   // load data
-  d3.csv("classified.csv", function(error, data) {
+  d3.csv("length.csv", function(error, data) {
     if (error) throw error;
     // change string (from CSV) into number format
     data.forEach(function(d) {

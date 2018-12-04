@@ -31,18 +31,21 @@ def testscript():
             print ("false")
 
 if __name__ == "__main__":
-    with open("classified.csv", 'a', newline='') as newcsv:
+    with open("length.csv", 'a', newline='') as newcsv:
         writer = csv.writer(newcsv, delimiter=',')
-        writer.writerow(["Id","Party", "Handle", "Tweet", "Sentiment", "Category"])
+        writer.writerow(["Id","Party", "Handle", "Tweet", "Sentiment", "Category", "Length"])
         with open("data.csv", "r") as f:
             issues = Classification();
             csvreader = csv.reader(f, delimiter=',')
             count = 0
-            for party, handle, tweet, tweet_sentiment in csvreader:
-                tweet_category = issues.classify(tweet)
-                if tweet_category and tweet_sentiment != "0.0":
-                    print (tweet_sentiment)
-                    count+=1;
-                    writer.writerow([count, party, handle, tweet, tweet_sentiment, tweet_category])
+            try:
+                for party, handle, tweet, tweet_sentiment in csvreader:
+                    tweet_category = issues.classify(tweet)
+                    if tweet_category and tweet_sentiment != "0.0":
+                        count+=1;
+                        tweet_length = len(tweet)
+                        writer.writerow([count, party, handle, tweet, tweet_sentiment, tweet_category, tweet_length])
+            except ValueError:
+                pass
 
 

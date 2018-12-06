@@ -77,12 +77,14 @@ function redraw() {
     var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
             idleTimeout,
             idleDelay = 350;
+
     var tooltip = d3.tip()
         .attr("class", "d3-tip")
         .offset([-10, 0])
         .html(function(d) {
           return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
         });
+
     // add the graph canvas to the body of the webpage
     var graphSvg = d3.select("#scatterplot").append("svg")
         .attr("class", "graph")
@@ -90,6 +92,7 @@ function redraw() {
         .attr("height", h + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     graphSvg.call(tooltip);
 
     var clip = graphSvg.append("defs").append("clipPath")
@@ -123,15 +126,22 @@ function redraw() {
         .attr("class", "yaxis")
         .attr("fill-opacity", 0)
         .call(yAxis);
+
+    scatter.append("g")
+      .attr("class", "brush")
+      .call(brush)
+      .selectAll('rect')
+      .attr('height', h);
     
     // draw dots
-    scatter.selectAll(".dot")
+    var dots = scatter.selectAll(".dot")
         .data(data)
         .enter().append("circle")
         .attr("id", function(d) { return d["Category"]; })
         .attr("class", function(d) { return d["Category"]})
         .attr("class", "dot")
-        .attr("r", 3.5)
+        .attr("r", 4)
+        .attr("stroke-opacity", 0)
         .attr("cx", function(d) {
           if (xMap(d)) {
             return xMap(d);
@@ -142,16 +152,24 @@ function redraw() {
         .attr("cy", yMap)
         .style("opacity", .8)
         .style("fill", function(d) { return colour(cValue(d));}) 
-        .on("mouseover", test)
+        .on("mouseover", tooltip.show)
+        .on("mouseout", tooltip.hide);
 
-    scatter.append("g")
-              .attr("class", "brush")
-              .call(brush);
-    function test(d){
-      console.log('TEST')
-      console.log(d);
+    dots.on('mousedown', function(){
+      brush_elm = graphSvg.select(".brush").node();
+      new_click_event = new Event('mousedown');
+      new_click_event.pageX = d3.event.pageX;
+      new_click_event.clientX = d3.event.clientX;
+      new_click_event.pageY = d3.event.pageY;
+      new_click_event.clientY = d3.event.clientY;
+      brush_elm.dispatchEvent(new_click_event);
+    });
 
-    }
+    // function test(d){
+    //   console.log('TEST')
+    //   console.log(d);
+
+    // }
 
     function selectNode(d){
       console.log(d3.select(".dot[id*='"+ d["Category"] + "']"));

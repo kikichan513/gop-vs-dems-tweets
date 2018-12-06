@@ -84,6 +84,7 @@ svg {
   color: #fff;
   border-radius: 2px;
   width: 150px;
+  z-index: 2;
 }
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
@@ -96,12 +97,14 @@ svg {
   content: "\25BC";
   position: absolute;
   text-align: center;
+  z-index: 2;
 }
 /* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
+  z-index: 2;
 } 
 
 #range-label {

@@ -143,7 +143,7 @@ function redraw() {
         .attr("class", function(d) { return d["Category"]})
         .attr("class", "dot")
         .attr("r", 4)
-        .attr("stroke-opacity", 0)
+        .attr("stroke-opacity", .5)
         .attr("cx", function(d) {
           if (xMap(d)) {
             return xMap(d);
@@ -189,7 +189,7 @@ function redraw() {
         idleTimeout = null;
     }
     function zoom() {
-      var t = graphSvg.transition().duration(750);
+      var t = graphSvg.transition().duration(2500);
       graphSvg.select(".xaxis").transition(t).call(xAxis);
       graphSvg.select(".yaxis").transition(t).call(yAxis);
       graphSvg.selectAll(".dot").transition(t)

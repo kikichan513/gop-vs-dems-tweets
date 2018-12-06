@@ -1,3 +1,15 @@
+/*
+
+// case 1: filter on 1 issue, filter on party
+// case 2: filter on 2 issue, filter on party
+// case 3: filter on 1 issue, filter on party, filter on 2nd issue
+// case 4: filter on party, then filter on issue
+// case 5: filter on party, filter on issue, switch party
+// case 6: switch parties
+
+*/
+
+
 function drawButtons(margin, w, h) {
   // var margin = {top: 75, right: 80, bottom: 80, left: 225},
   //   w = window.innerWidth - window.innerWidth / 3,
@@ -9,7 +21,50 @@ function drawButtons(margin, w, h) {
     });
   }
   var clicked = []
-  var clickedparty = []
+  var clickedparty = ""
+
+
+   function filterIssue (d){ 
+            // TODO: Make sure button is shaded dark when pressed. Doesn't work at the moment
+            
+            // one more : if you click on party - then click on issue
+            category = this.id;  
+            if (!clicked.includes(category)){ // havent been clicked before
+              
+              d3.select(this)
+              .style("fill", "#004d99")
+              .style("fill-opacity", .6);
+
+              clicked.push(category);
+
+              d3.selectAll(".dot").style("opacity", .8);
+              if (clickedparty == ""){ // no party filter has been applied
+                d3.selectAll(".dot").filter( d => {
+                return !clicked.includes(d.Category)}).style("opacity", .2);
+              }else { // a party filter has been applied
+                console.log("a party filter has been applied")
+                d3.selectAll(".dot").filter( d => {
+                return (!clicked.includes(d.Category)|| d.Party != clickedparty)}).style("opacity", .2);
+              }
+    
+            }
+            else { 
+
+              d3.select(this)
+              .style("fill", "#61b3d0")
+              .style("fill-opacity", .6)  
+
+              clicked = removeByValue(clicked,category)
+              if (clicked.length){
+                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
+              }
+              if (!clicked.length){
+                d3.selectAll(".dot").style("opacity", .8);
+              }
+            }
+            
+          }
+
   // http://blockbuilder.org/Ctuauden/52d057254665400f561ef73cb6e5841a
   var buttons = d3.select("#buttons").append("svg")
         .attr("class", "btn")
@@ -36,33 +91,7 @@ function drawButtons(margin, w, h) {
           .on('mouseleave', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
           })
-          .on("click", function (d){ 
-            // TODO: Make sure button is shaded dark when pressed. Doesn't work at the moment
-            d3.select(this)
-              .style("fill", "#61b3d0")
-              .style("fill-opacity", 1);
-
-            category = this.id;  
-            if (!clicked.includes(category)){ // havent been clicked before
-              clicked.push(category);
-
-              d3.selectAll(".dot").style("opacity", .8);
-
-              d3.selectAll(".dot").filter( d => {
-                return !clicked.includes(d.Category) }).style("opacity", .2);
-            }
-            else { 
-              clicked = removeByValue(clicked,category)
-              if (clicked.length){
-                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
-              }
-              if (!clicked.length){
-                d3.selectAll(".dot").style("opacity", .8);
-              }
-            }
-            
-          });
-
+          .on("click", filterIssue);
     buttons.append("text")
             .text('Incarceration')
             .attr('x', w / 5.2)
@@ -87,31 +116,7 @@ function drawButtons(margin, w, h) {
           .on('mouseleave', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
           })
-          .on("click", function (d){ 
-            d3.select(this).style("fill-opacity", 1);
-
-            category = this.id
-            if (!clicked.includes(category)){ 
-              d3.select(this).style('fill', "black");
-              d3.selectAll(".dot").style("opacity", .8);
-
-              clicked.push(category);
-
-              d3.selectAll(".dot").filter( d => {
-                return !clicked.includes(d.Category) }).style("opacity", .2);
-            }
-            else { 
-              clicked = removeByValue(clicked,category)
-              if (clicked.length){
-                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
-              }
-              if (!clicked.length){
-                d3.selectAll(".dot").style("opacity", .8);
-              }
-            }
-            
-          });
-
+          .on("click", filterIssue);
     buttons.append("text")
             .text('Immigration')
             .attr('x', w / 2.8)
@@ -136,30 +141,7 @@ function drawButtons(margin, w, h) {
           .on('mouseleave', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
           })
-          .on("click", function (d){ 
-            d3.select(this).style("fill-opacity", 1);
-
-            category = this.id
-            if (!clicked.includes(category)){ 
-              
-              d3.selectAll(".dot").style("opacity", .8);
-
-              clicked.push(category);
-
-              d3.selectAll(".dot").filter( d => {
-                return !clicked.includes(d.Category) }).style("opacity", .2);
-            }
-            else { 
-              clicked = removeByValue(clicked,category)
-              if (clicked.length){
-                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
-              }
-              if (!clicked.length){
-                d3.selectAll(".dot").style("opacity", .8);
-              }
-            }
-            
-          });
+          .on("click", filterIssue);
 
     buttons.append("text")
             .text('Abortion')
@@ -185,30 +167,7 @@ function drawButtons(margin, w, h) {
           .on('mouseleave', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
           })
-          .on("click", function (d){ 
-            d3.select(this).style("fill-opacity", 1);
-
-            category = this.id
-            if (!clicked.includes(category)){ 
-              
-              d3.selectAll(".dot").style("opacity", .8);
-
-              clicked.push(category);
-
-              d3.selectAll(".dot").filter( d => {
-                return !clicked.includes(d.Category) }).style("opacity", .2);
-            }
-            else { 
-              clicked = removeByValue(clicked,category)
-              if (clicked.length){
-                d3.selectAll(".dot[id*='"+ category + "']").style("opacity", .2)
-              }
-              if (!clicked.length){
-                d3.selectAll(".dot").style("opacity", .8);
-              }
-            }
-            
-          });
+          .on("click", filterIssue);
 
     buttons.append("text")
             .text('Gun control')
@@ -228,29 +187,80 @@ function drawButtons(margin, w, h) {
           .attr("ry", 20)
           .on('mouseover', function(d, i) {
             d3.select(this).style('fill-opacity', .8);
-          })
-          .on("click", function (d){
-            d3.select(this)
-              .style("fill", "#8e0000")
-              .style("fill-opacity", .6);
-            party = this.id
-            if (clicked != party){
-              d3.selectAll(".dot").filter(function(d) { 
-              return d.Party != party; 
-              }).style("opacity", .2);
-              clicked = party
-            }
-            else {
-              clicked = ""
-              d3.selectAll(".dot").style("opacity", 1);
-              d3.select(this)
-                .style("fill", "#ff4040")
-                .style("fill-opacity", .6);
-            }
-          })
+          }) 
           .on('mouseout', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
-          });
+          })
+          .on("click", function (d){
+
+            
+             
+           
+
+            party = this.id
+            console.log(party);
+
+            if (clickedparty != party){ // not been clicked yet
+             
+               if (clickedparty.length){
+                d3.select('#Democrat')
+                .style("fill", "#61b3d0")
+                .style("fill-opacity", .6)  
+              }
+
+             d3.select(this)
+              .style("fill", "#8e0000")
+              .style("fill-opacity", .6);
+
+
+            console.log("clickedparty != party")
+            clickedparty = party
+
+            d3.selectAll(".dot").style("opacity", .8);
+
+            if (clicked.length > 0){
+              // an issue has been filtered
+              console.log(" an issue has been filtered")
+              console.log(clicked)
+              d3.selectAll(".dot").filter(function(d) { 
+              
+              return (d.Party != clickedparty || !clicked.includes(d.Category))}).style("opacity", .2);
+            }
+            else {
+              console.log(" no issue has been filtered")
+              d3.selectAll(".dot").filter(function(d) { 
+              return (d.Party != clickedparty)}).style("opacity", .2);
+            }
+            
+          }
+          else { // it had been clicked
+
+             d3.select(this)
+            .style("fill", "#ff4040")
+            .style("fill-opacity", .6);
+
+            console.log("clickedparty == party")
+
+            clickedparty = "" 
+
+            // if an issue has been clicked, remove the filter of party to show both rep dems on the issue(s) filtered
+            if (clicked.length > 0){
+              d3.selectAll(".dot").style("opacity", .8);
+
+              console.log("remove filter on party, other issues present")
+              d3.selectAll(".dot").filter( d => {
+              return !clicked.includes(d.Category)}).style("opacity", .2);
+            }
+            // if there is no issue filtered on, return to normal
+            else {
+              console.log("remove filter on party, no issues present")
+              d3.selectAll(".dot").style("opacity", .8);
+            }
+
+          }
+          
+          })
+         
 
     buttons.append("text")
             .text('Rep')
@@ -258,13 +268,6 @@ function drawButtons(margin, w, h) {
             .attr('y', window.innerHeight * .05)
             .attr('fill', 'black');
 
-// case 1: filter on 1 issue, filter on party
-// case 2: filter on 2 issue, filter on party
-// case 3: filter on 1 issue, filter on party, filter on 2nd issue
-// case 4: filter on party, then filter on issue
-// case 5: filter on party, filter on issue, switch party
-// perhaps change the data structure 
-// when click on something, always 
     buttons.append("rect")
           .attr("id", "Democrat")
           .attr("x", w)
@@ -274,37 +277,78 @@ function drawButtons(margin, w, h) {
           .style("fill", "#0099cc")
           .style("fill-opacity", .6)
           .attr("rx", 20)
-          .attr("ry", 20);
-          // .on('mouseover', function(d, i) {
-          //   d3.select(this).style('fill-opacity', 1);
-          // })
-          // .on('mouseout', function(d, i) {
-          //   d3.select(this).style('fill-opacity', .6);
-          // });
-          // .on("click", function (d){ 
-          //   d3.select(this)
-          //     .style("fill", "#006080")
-          //     .style("fill-opacity", .6);
-          //   party = this.id
+          .attr("ry", 20)
+          .on('mouseover', function(d, i) {
+            d3.select(this).style('fill-opacity', .8);
+          }) 
+          .on('mouseout', function(d, i) {
+            d3.select(this).style('fill-opacity', .6);
+          })
+          .on("click", function (d){
 
-          //   if (!clickedparty.includes(party)){
-          //      clickedparty.push(party);
-          //      d3.selectAll(".dot").filter(function(d) { 
-          //        return (!clicked.includes(d.Category) && !clickedparty.includes(d.Party))
-          //       }).style("opacity", .2);
-          //   }
-          //   else {
-          //     clickedparty =  removeByValue(clickedparty,party)
-          //     if (clicked.length){
-          //         d3.selectAll(".dot").filter( d => {
-          //         return !clicked.includes(d.Category) }).style("opacity", .2);
-          //     }
-          //     d3.select(this)
-          //       .style("fill", "#0099cc")
-          //       .style("fill-opacity", .6);
-          //   }
-          // }
+            party = this.id
+          //  console.log(party);
+
+            if (clickedparty != party){ // not been clicked yet
+            
+              if (clickedparty.length){
+                d3.select('#Republican')
+                .style("fill", "#ff4040")
+                .style("fill-opacity", .6);
+              }
+             
+             d3.select(this)
+              .style("fill", "#004d99")
+              .style("fill-opacity", .6);
+
+          //  console.log("clickedparty != party")
+            clickedparty = party
+
+            d3.selectAll(".dot").style("opacity", .8);
+
+            if (clicked.length > 0){
+              // an issue has been filtered
+             // console.log(" an issue has been filtered")
+             // console.log(clicked)
+              d3.selectAll(".dot").filter(function(d) { 
+              
+              return (d.Party != clickedparty || !clicked.includes(d.Category))}).style("opacity", .2);
+            }
+            else {
+             // console.log(" no issue has been filtered")
+              d3.selectAll(".dot").filter(function(d) { 
+              return (d.Party != clickedparty)}).style("opacity", .2);
+            }
+            
+          }
+          else { // it had been clicked
+
+            d3.select(this)
+              .style("fill", "#61b3d0")
+              .style("fill-opacity", .6)  
+
+            //console.log("clickedparty == party")
+
+            clickedparty = "" 
+
+            // if an issue has been clicked, remove the filter of party to show both rep dems on the issue(s) filtered
+            if (clicked.length > 0){
+              d3.selectAll(".dot").style("opacity", .8);
+
+             // console.log("remove filter on party, other issues present")
+              d3.selectAll(".dot").filter( d => {
+              return !clicked.includes(d.Category)}).style("opacity", .2);
+            }
+            // if there is no issue filtered on, return to normal
+            else {
+            //  console.log("remove filter on party, no issues present")
+              d3.selectAll(".dot").style("opacity", .8);
+            }
+
+          }
           
+          })
+         
     buttons.append("text")
             .text('Dem')
             .attr('x', w / .95)

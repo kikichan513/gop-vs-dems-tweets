@@ -7,6 +7,7 @@
 // case 5: filter on party, filter on issue, switch party
 // case 6: switch parties
 
+
 */
 
 function drawButtons(margin, w, h) {
@@ -14,13 +15,13 @@ function drawButtons(margin, w, h) {
   //   w = window.innerWidth - window.innerWidth / 3,
   //   h = window.innerHeight - window.innerHeight / 4;
 
-  function removeByValue(array, value){
-    return array.filter(function(elem, _index){
-        return value != elem;
-    });
-  }
-  var clicked = []
-  var clickedparty = ""
+    function removeByValue(array, value){
+      return array.filter(function(elem, _index){
+          return value != elem;
+      });
+    }
+    var clicked = []
+    var clickedparty = ""
 
 
    function filterIssue (d){ 

@@ -12,6 +12,9 @@ https://gist.github.com/weiglemc/6185069
 
 Todos:
 
-- Make graph responsive
-- Redo html tool tips without tool tips [tati]
-- Nice website
+- Make graph responsive [kiki]
+- Nice website [kiki]
+- selecting nodes [kiki]
+- Make bar graph [tati]
+- Fix number in slider after zoom [tati]
+- 

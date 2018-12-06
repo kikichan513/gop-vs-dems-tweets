@@ -9,7 +9,6 @@
 
 */
 
-
 function drawButtons(margin, w, h) {
   // var margin = {top: 75, right: 80, bottom: 80, left: 225},
   //   w = window.innerWidth - window.innerWidth / 3,

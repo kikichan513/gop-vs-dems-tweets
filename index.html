@@ -14,8 +14,9 @@
 <body>
   <div id="container">
     <div class="graph"></div>
-    <div id="scatterplot"></div>
     <div id="buttons"></div>
+    <div id="scatterplot"></div>
+  
     <div id="slider-container"></div>
     <div id="range-label">Democrats: Republicans: </div>
   </div>
@@ -165,12 +166,6 @@ function redraw() {
       brush_elm.dispatchEvent(new_click_event);
     });
 
-    // function test(d){
-    //   console.log('TEST')
-    //   console.log(d);
-
-    // }
-
     function selectNode(d){
       console.log(d3.select(".dot[id*='"+ d["Category"] + "']"));
       d3.select(".dot[id*='"+ d["Category"] + "']").style("opacity", 1);
@@ -207,7 +202,6 @@ function redraw() {
 }
 
 redraw();
-
 
 var slider = createD3RangeSlider(0, 2000, "#slider-container");
 

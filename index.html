@@ -1,32 +1,36 @@
-<!DOCTYPE html>
-<!-- TODO: Get rid of weird white space below the slider, make slider not move weirdly when page is resized, make buttons/graph responsive to page resize -->
-<html>
-<meta charset="utf-8">
-
 <!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
 <!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
 <!-- Coding style based on http://gist.github.com/mbostock/5977197 -->
 <!-- Zoom based on https://bl.ocks.org/EfratVil/d956f19f2e56a05c31fb6583beccfda7 -->
+
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
 </style>
 <link href="slider/d3RangeSlider.css" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
 <body>
+
+
   <div id="container">
-    <div class="graph"></div>
-    <div id="buttons"></div>
-    <div id="scatterplot"></div>
-  
-    <div id="slider-container"></div>
-    <div id="range-label">Democrats: Republicans: </div>
+    <div id = buttoncontainer>
+       <div id="buttons"></div>
+    </div>
+
+    <div id="scatterplot">
+      <div id="slider-container"></div>
+    </div>
+    <div id="bar"></div>
+
   </div>
 <script src="http://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 <script src="d3-tip.js"></script>
 <script src="buttons.js"></script>
 <script src="slider/d3RangeSlider.js"></script>
-
-
 <script>
 
 var funhash=function(s) {
@@ -34,208 +38,394 @@ var funhash=function(s) {
         h=Math.imul(h+s.charCodeAt(i)|0, 2654435761);
     return (h^h>>>17)>>>0;
 };
+/*
+######################################## 
+#                                      #
+#         SET UP GRAPH                 #
+#                                      #
+########################################*/
+d3.selectAll("svg > *").remove();
+drawButtons(690, 257);
 
-function redraw() {
-  d3.selectAll("svg > *").remove();
-  var margin = {top: 60, right: 80, bottom: 80, left: 225},
-    w = window.innerWidth - window.innerWidth / 3,
-    h = window.innerHeight - window.innerHeight / 4;
-    
-  /* From https://gist.github.com/iperelivskiy/4110988 */
+var margin = {top: 20, right: 20, bottom: 160, left: 60},
+ dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
+    w = dim - margin.left - margin.right,
+    h = dim - margin.top - margin.bottom;
 
-  /* 
-   * value accessor - returns the value to encode for a given data object.
-   * scale - maps value to a visual display encoding, such as a pixel position.
-   * map function - maps from data value to display value
-   * axis - sets up axis
-   */ 
-  // setup x 
-  // domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
-  var xValue = function(d) { return d["Sentiment"];}, // data -> value
-      xScale = d3.scaleLinear().range([0,w]), // value -> display 
-      xMap = function(d) { return xScale(xValue(d));}; // data -> display
-     
-  // setup y
-  var yValue = function(d) { return funhash(d["Tweet"])}, // data -> value
-      yScale = d3.scaleLinear().range([0, h]), // value -> display
-      yMap = function(d) { return yScale(yValue(d));}; // data -> display
-    
-  // setup fill colour
-  var cValue = function(d) { return d["Party"];}, 
-      colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
+/* From https://gist.github.com/iperelivskiy/4110988 */
 
-  // load data
-  d3.csv("length.csv", function(error, data) {
-    if (error) throw error;
-    // change string (from CSV) into number format
-    data.forEach(function(d) {
-      d["Sentiment"] = + d["Sentiment"];
+/* 
+ * value accessor - returns the value to encode for a given data object.
+ * scale - maps value to a visual display encoding, such as a pixel position.
+ * map function - maps from data value to display value
+ * axis - sets up axis
+ */ 
 
-    });
-    yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
-    xScale.domain([-1, 1]);
-    var xAxis = d3.axisBottom(xScale).ticks(10);
-    var yAxis = d3.axisLeft(yScale);
-    var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
-            idleTimeout,
-            idleDelay = 350;
+// domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
 
-    var tooltip = d3.tip()
-        .attr("class", "d3-tip")
-        .offset([-10, 0])
-        .html(function(d) {
-          return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
-        });
 
-    // add the graph canvas to the body of the webpage
-    var graphSvg = d3.select("#scatterplot").append("svg")
-        .attr("class", "graph")
-        .attr("width", w + margin.left + margin.right)
-        .attr("height", h + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+// set up x
+var xValue = function(d) { return d["Sentiment"];}, // data -> value
+    xScale = d3.scaleLinear().range([0,w]), // value -> display 
+    xMap = function(d) { return xScale(xValue(d));}; // data -> display
+   
+// setup y
+var yValue = function(d) { return d["Tweet"].length; }, // data -> value
+    yScale = d3.scaleLinear().range([h, 0]), // value -> display
+    yMap = function(d) { return yScale(yValue(d));}; // data -> display
+  
+// setup fill colour
+var cValue = function(d) { return d["Party"];}, 
+    colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
 
-    graphSvg.call(tooltip);
+// adds svg to the html dom
+var graphSvg = d3.select("#scatterplot").append("svg")
+    .attr("class", "graph")
+    .attr("width", w + margin.left + margin.right)
+    .attr("height", h + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var clip = graphSvg.append("defs").append("clipPath")
-            .attr("id", "clip")
-            .append("rect")
-            .attr("width", w)
-            .attr("x", 0) 
-            .attr("y", 0)
-            .attr("transform", "translate(0,-20)") // fixes a bug where 
-            .attr("height", h+20);                // top of scatterplot was cut off
+var tooltip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([-10, 0])
+    .html(function(d) {
+      return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
+    }); 
 
-    var scatter = graphSvg.append("g")
-               .attr("id", "scatterplot")
-               .attr("clip-path", "url(#clip)");
+graphSvg.call(tooltip);     
 
-    // x-axis
-    graphSvg.append("g")
-        .attr("class", "xaxis axis")
-        .attr("transform", "translate(0," + h + ")")
-        .call(xAxis)
-      .append("text")
-        .attr("class", "label")
-        .attr("x", w)
-        .attr("y", -6)
-        .attr("fill", "black") 
-        .style("text-anchor", "start")
-        .text("Sentiment");
+var clip = graphSvg.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", w)
+            .attr("x", 0) 
+            .attr("y", 0)
+            .attr("transform", "translate(0,-20)") // fixes a bug where 
+            .attr("height", h+20);                // top of scatterplot was cut off
 
-    // y-axis    
-    graphSvg.append("g")
-        .attr("class", "yaxis")
-        .attr("fill-opacity", 0)
-        .call(yAxis);
+var scatter = graphSvg.append("g")
+           .attr("id", "scatterplot")
+           .attr("clip-path", "url(#clip)");
 
-    scatter.append("g")
+
+// BAR
+
+var barMargin = {top: 20, right: 20, bottom: 160, left: 250},
+ dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+    barW = dim - barMargin.left - barMargin.right,
+    barH = dim - barMargin.top - margin.bottom;
+
+parties = [{party: "Republicans", count: 0}, {party: "Democrat", count: 0}]
+
+var barX = d3.scaleBand()
+          .range([0, barW])
+          .padding(0.1);
+
+var barY = d3.scaleLinear()
+          .range([barH, 0]);
+
+var barSVG = d3.select("#bar").append("svg")
+    .attr("width", barW + barMargin.left + barMargin.right)
+    .attr("height", barH + barMargin.top + barMargin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + barMargin.left + "," + barMargin.top + ")");
+
+barX.domain(parties.map(function(d) { return d.party; }))
+barY.domain([0, 1500]);
+
+barSVG.selectAll(".bar")
+      .data(parties)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return barX(d.party); })
+      .attr("width", barX.bandwidth())
+      .attr("y", function(d) { return barY(d.count); })
+      .attr("height", function(d) { return barH - barY(d.count); });
+
+// add the x Axis
+var xAxisHandleForUpdate = barSVG.append("g")
+    .attr("transform", "translate(0," + barH + ")")
+    .call(d3.axisBottom(barX));
+
+// add the y Axis
+var yAxisHandleForUpdate = barSVG.append("g")
+    .call(d3.axisLeft(barY));
+
+var xAxis = null;
+var yAxis = null;
+// var brush = null;
+/*
+######################################## 
+#                                      #
+#       BEGIN TO INPUT DATA            #
+#                                      #
+########################################*/
+
+d3.csv("length.csv", function(error, data) {
+  if (error) throw error;
+
+  data.forEach(function(d) {
+    d["Sentiment"] = + d["Sentiment"];
+  });
+
+  yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
+  xScale.domain([-1, 1]);
+  xAxis = d3.axisBottom(xScale).ticks(w / 80);
+  yAxis = d3.axisLeft(yScale);
+  var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
+          idleTimeout,
+          idleDelay = 350;
+
+  // add in x-axis
+  graphSvg.append("g")
+      .attr("class", "xaxis axis")
+      .attr("transform", "translate(0," + h + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", w)
+      .attr("y", -6)
+      .attr("fill", "black") 
+      .style("text-anchor", "start")
+      .text("Sentiment");
+
+  // Add in y axis    
+  graphSvg.append("g")
+      .attr("class", "yaxis")
+      // .attr("fill-opacity", 0)
+      .call(yAxis);
+      // .append("text")
+      //   .attr("class", "label")
+      //   .attr("transform", "rotate(-90)")
+      //   .attr("x", w /2.5 * -1)
+      //   .attr("y", -30)
+      //   .attr("fill", "black")
+      //   .style("text-anchor", "middle")
+      //   .text("Tweet Length");
+
+  // add in class brush
+  scatter.append("g")
       .attr("class", "brush")
       .call(brush)
       .selectAll('rect')
       .attr('height', h);
-    
-    // draw dots
-    var dots = scatter.selectAll(".dot")
-        .data(data)
-        .enter().append("circle")
-        .attr("id", function(d) { return d["Category"]; })
-        .attr("class", function(d) { return d["Category"]})
-        .attr("class", "dot")
-        .attr("r", 4)
-        .attr("stroke-opacity", .5)
-        .attr("cx", function(d) {
+  
+  // draw dots
+  var clickFlag = false;
+  var dots = scatter.selectAll(".dot")
+      .data(data)
+      .enter().append("circle")
+      .attr("id", function(d) { return d["Category"]; })
+      .attr("class", function(d) { return d["Category"]})
+      .attr("class", "dot")
+      .attr("r", 4)
+      .attr("stroke-opacity", .5)
+      .attr("cx", function(d) {
+        if (xMap(d)) {
+          return xMap(d);
+        } else {
+          return 0;
+        }
+      })
+      .attr("cy", yMap)
+      .style("opacity", .8)
+      .style("fill", function(d) { return colour(cValue(d));}) 
+      .on("mouseout", tooltip.hide)
+      .on("mouseover", tooltip.show)
+      .on("click", function (d){
+      
+      console.log("onclick", this.style.fill)
+      if (this.style.fill == d3.rgb("#ff4040") || this.style.fill == d3.rgb("#0099cc")){
+         console.log('not clicked yet');
+         d3.select(this).style("fill",  "#303030");
+      }  
+     else {
+         console.log("it's grey")
+         returncolor = colour(cValue(d))
+         console.log(returncolor)
+        d3.select(this).style("fill", returncolor);
+     }
+  });
+
+  dots.on('mousedown', function(){
+    brush_elm = graphSvg.select(".brush").node();
+    new_click_event = new Event('mousedown');
+    new_click_event.pageX = d3.event.pageX;
+    new_click_event.clientX = d3.event.clientX;
+    new_click_event.pageY = d3.event.pageY;
+    new_click_event.clientY = d3.event.clientY;
+    brush_elm.dispatchEvent(new_click_event);
+  });
+
+  function brushended() {
+    var s = d3.event.selection;
+    if (!s) {
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+      xScale.domain(d3.extent(data, xValue)).nice();
+      yScale.domain(d3.extent(data, yValue)).nice();
+    } else {
+      xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+      yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+      graphSvg.select(".brush").call(brush.move, null);
+      }
+    zoom();
+  }
+  function idled() {
+      idleTimeout = null;
+  }
+  function zoom() {
+    var t = graphSvg.transition().duration(2500);
+    graphSvg.select(".xaxis").transition(t).call(xAxis);
+    graphSvg.select(".yaxis").transition(t).call(yAxis);
+    graphSvg.selectAll(".dot").transition(t)
+      .attr("cx", xMap)
+      .attr("cy", yMap);
+  }
+}); // END OF DATA CSV
+
+
+/*
+######################################## 
+#                                      #
+#         SLIDER                       #
+#                                      #
+########################################*/
+
+var slider = createD3RangeSlider(0, 2000, "#slider-container");
+
+slider.onChange(function(newRange){
+      var scaledValues = scaleSlider(newRange.begin, newRange.end)
+      var lower = scaledValues.lower;
+      var upper = scaledValues.upper;
+  
+      var dems = d3.selectAll(".dot")
+        .filter(function(d) { 
+            return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
+          })
+        .size();
+      var gop = d3.selectAll(".dot")
+        .filter(function(d) { 
+          return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
+          })
+        .size();
+      
+      d3.select("#range-label").text("Democrats: " + dems + " Republicans: " + gop);
+      updateBars(w, h, partyCount());
+});
+
+function scaleSlider(begin, end) {
+  var lower = 0;
+  var upper = 0;
+  if (begin == 0) {
+    lower = -1;
+  } else if (begin == 1000) {
+    lower = 0;
+  } else {
+    lower = -1 + .001 * begin;
+  }
+
+  if (end == 1000) {
+    upper = 0;
+  } else {
+    upper = (end * .001) - 1;
+  }
+  return {lower: lower, upper: upper};
+}
+
+function partyCount() {
+  scaledValues = scaleSlider(slider.range()["begin"], slider.range()["end"])
+  var lower = scaledValues.lower;
+  var upper = scaledValues.upper;
+
+  var dems = d3.selectAll(".dot")
+    .filter(function(d) { 
+        return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
+      })
+    .size();
+
+  var gop = d3.selectAll(".dot")
+    .filter(function(d) { 
+      return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
+      })
+    .size();
+
+  return {dems: dems, gop: gop};
+}
+
+/*
+######################################## 
+#                                      #
+#         TIME TO RESIZE               #
+#                                      #
+########################################*/
+
+// http://bl.ocks.org/josiahdavis/a3534073492ca37b3682
+
+var updateBars = function(w, h, count) {
+    var dems = count.dems;
+    var gop = count.gop;
+
+    var parties = [{party: "Republicans", count: gop}, {party: "Democrat", count: dems}]
+
+    // First update the y-axis domain to match data
+    // barY.domain([0, d3.max(parties, function(d) { return d.count; })]);
+    // yAxisHandleForUpdate.call(barY);
+
+    var bars = barSVG.selectAll(".bar").data(parties);
+
+    // Update old ones, already have x / width from before
+    bars
+      .transition().duration(250)
+      .attr("y", function(d,i) { return barY(d.count); })
+      .attr("height", function(d,i) { return barH - barY(d.count); })
+      .append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", function(d) { return barX(d.party); })
+        .attr("y", function(d) { return barX(d.count) - 10; })
+        .text(function(d) { return barX(d.count); });
+
+    // Remove old ones
+    bars.exit().remove();
+};
+
+function redraw(){
+
+var margin = {top: 20, right: 20, bottom: 160, left: 60},
+ dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
+    w = dim - margin.left - margin.right,
+    h = dim - margin.top - margin.bottom;
+
+
+  xScale.range([0, w]);
+  yScale.range([h, 0]);
+
+  graphSvg.select(".xaxis")
+      .attr("transform", "translate(0," + h + ")")
+      .call(xAxis);
+
+  graphSvg.select(".yaxis")
+      .call(yAxis);
+
+  xAxis.ticks(w / 80);
+
+  graphSvg.selectAll('.dot')
+    .attr("cx", function(d) {
           if (xMap(d)) {
             return xMap(d);
           } else {
             return 0;
           }
         })
-        .attr("cy", yMap)
-        .style("opacity", .8)
-        .style("fill", function(d) { return colour(cValue(d));}) 
-        .on("mouseover", tooltip.show)
-        .on("mouseout", tooltip.hide);
+    .attr("cy", yMap);
 
-    dots.on('mousedown', function(){
-      brush_elm = graphSvg.select(".brush").node();
-      new_click_event = new Event('mousedown');
-      new_click_event.pageX = d3.event.pageX;
-      new_click_event.clientX = d3.event.clientX;
-      new_click_event.pageY = d3.event.pageY;
-      new_click_event.clientY = d3.event.clientY;
-      brush_elm.dispatchEvent(new_click_event);
-    });
-
-    function selectNode(d){
-      console.log(d3.select(".dot[id*='"+ d["Category"] + "']"));
-      d3.select(".dot[id*='"+ d["Category"] + "']").style("opacity", 1);
-    }
-
-    function brushended() {
-      var s = d3.event.selection;
-      if (!s) {
-        if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
-        xScale.domain(d3.extent(data, xValue)).nice();
-        yScale.domain(d3.extent(data, yValue)).nice();
-      } else {
-        xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
-        yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
-        graphSvg.select(".brush").call(brush.move, null);
-        }
-      zoom();
-    }
-    function idled() {
-        idleTimeout = null;
-    }
-    function zoom() {
-      var t = graphSvg.transition().duration(2500);
-      graphSvg.select(".xaxis").transition(t).call(xAxis);
-      graphSvg.select(".yaxis").transition(t).call(yAxis);
-      graphSvg.selectAll(".dot").transition(t)
-        .attr("cx", xMap)
-        .attr("cy", yMap);
-    }
-  });
-
-  drawButtons(margin, w, h);
-
+    // brush = d3.brush().extent([[0, 0], [w, h]]);
+    // scatter.select('.brush').call(brush);
 }
 
-redraw();
+window.addEventListener('resize', redraw);
 
-var slider = createD3RangeSlider(0, 2000, "#slider-container");
-
-slider.onChange(function(newRange){
-      var lower = 0;
-      var upper = 0;
-      if (newRange.begin < 1000) {
-        lower = newRange.begin * -.0005;
-      } else {
-        lower = newRange.begin * .0005;
-      }
-
-      if (newRange.end < 1000) {
-        upper = newRange.end * -.0005;
-      } else {
-        upper = newRange.end * .0005;
-      }
-      
-      var upper = newRange.end * .001;
-      var dems = d3.selectAll(".dot")
-        .filter(function(d) { 
-            return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
-          })
-        .size();
-      var gop = d3.selectAll(".dot")
-        .filter(function(d) { 
-          return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
-          })
-        .size();
-      d3.select("#range-label").text("Democrats: " + dems + " Republicans: " + gop);
-});
-
-window.addEventListener("resize", redraw);
 
 </script>
 </body>

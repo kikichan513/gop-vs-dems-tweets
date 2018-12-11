@@ -1,7 +1,7 @@
 body {
   font: 11px sans-serif;
   z-index: 1;
-  background-color: #38A1F3;
+  background-color: #6dc0ec;
 /*  background-image: linear-gradient(to right, #ef9da2 , #9de26f);*/
 
 }
@@ -11,9 +11,7 @@ body {
 .xaxis path {
   stroke: #000;
 }
-.yaxis {
-  opacity: 0;
-}
+
 .axis path,
 .axis line {
   
@@ -39,42 +37,49 @@ svg {
   pointer-events: none;
 }
 
-.btn {
-    position: relative;
-    z-index: 1;
-    border-radius: 5px;
-}
-
-#buttons {
-  position: relative;
-}
-
-#slider-container {
-  height: 25px;
-  width: 85%;
-  /*position: relative;*/
-  margin-top: 53%;
-  margin-left: 6.5%;
-}
-
-#container {
-  background-color: white;
-  border-radius: 35px;
-  width: 80%;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 30px;
-  right: 0px;
-  box-shadow: 0 8px 15px 0 rgba(0, 0, 0, 0.6), 0 6px 30px 0 rgba(0, 0, 0, 0.6);
-}
-
-
-.graph {
+#scatterplot {
+  width: 100%;
+  height: 100%;
+  min-width: 300px;
+  min-height: 300px;
   position: absolute;
-  left: 0;
-  top: 30px;
-  bottom: 30px;
+  float:left;
+}
+
+#bar {
+  width: 50%;
+  height: 100%;
+  float:right;
+  margin-left:0px;
+}
+#buttoncontainer{
+  border-top-left-radius: 35px;
+  border-top-right-radius: 35px;
+}
+
+#slider-container{
+  height: 25px; 
+  width: 60%;
+  position: absolute;
+  bottom: 50px;
+  left: 40px;
+}
+
+#range-label{
+  height: 25px; 
+  width: 85%;
+  position: absolute;
+  bottom: 20px;
+  left: 40px;
+}
+#container {
+  border-radius: 35px;
+  width: 100%;
+  margin: auto;
+  margin-top:20px;
+  padding-bottom: 30px;
+  height: 600px;
+  position: relative;
 }
 
 .d3-tip {

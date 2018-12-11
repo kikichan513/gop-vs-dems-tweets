@@ -76,7 +76,7 @@ var yValue = function(d) { return d["Tweet"].length; }, // data -> value
   
 // setup fill colour
 var cValue = function(d) { return d["Party"];}, 
-    colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#0099cc"}};
+    colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#66C7F4"}};
 
 // adds svg to the html dom
 var graphSvg = d3.select("#scatterplot").append("svg")
@@ -237,7 +237,7 @@ d3.csv("length.csv", function(error, data) {
       .on("click", function (d){
       
       console.log("onclick", this.style.fill)
-      if (this.style.fill == d3.rgb("#ff4040") || this.style.fill == d3.rgb("#0099cc")){
+      if (this.style.fill == d3.rgb("#ff4040") || this.style.fill == d3.rgb("#66C7F4")){
          console.log('not clicked yet');
          d3.select(this).style("fill",  "#303030");
       }  

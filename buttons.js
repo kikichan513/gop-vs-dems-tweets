@@ -29,7 +29,7 @@ function drawButtons(w1, h2 ) {
             if (!clicked.includes(category)){ // havent been clicked before
               
               d3.select(this)
-              .style("fill", "#004d99")
+              .style("fill", "#A1A2C2")
               .style("fill-opacity", .6);
 
               clicked.push(category);
@@ -48,7 +48,7 @@ function drawButtons(w1, h2 ) {
             else { 
 
               d3.select(this)
-              .style("fill", "#61b3d0")
+              .style("fill", "#6C6EA0")
               .style("fill-opacity", .6)  
 
               clicked = removeByValue(clicked,category)
@@ -75,9 +75,10 @@ function drawButtons(w1, h2 ) {
           .attr("y", h / 200 )
           .attr("width", w/ 10)
           .attr("height", h / 20)
-          .attr("fill", "#61b3d0")
+          .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)   // ORIGINAL BUTTON .6
-          .attr('stroke', '#2378ae')
+          .attr('stroke', '#ffffff')
+          .attr('stroke-opacity', .5)
           .attr('stroke-width', '1')
           .attr("rx", 4)
           .on('mouseenter', function(d, i) {
@@ -100,9 +101,10 @@ function drawButtons(w1, h2 ) {
           .attr("y", h / 200 )
           .attr("width", w/ 10)
           .attr("height", h / 20)
-          .attr("fill", "#61b3d0")
+          .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)  // ORIGINAL BUTTON .6
-          .attr('stroke', '#2378ae')
+          .attr('stroke', '#ffffff')
+          .attr('stroke-opacity', .5)
           .attr('stroke-width', '1')
           .attr("rx", 4)
           .on('mouseenter', function(d, i) {
@@ -125,9 +127,10 @@ function drawButtons(w1, h2 ) {
           .attr("y", h / 200 )
           .attr("width", w/ 10)
           .attr("height", h / 20)
-          .attr("fill", "#61b3d0")
+          .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)
-          .attr('stroke', '#2378ae')
+          .attr('stroke', '#ffffff')
+          .attr('stroke-opacity', .5)
           .attr('stroke-width', '1')
           .attr("rx", 4)
           
@@ -151,9 +154,10 @@ function drawButtons(w1, h2 ) {
           .attr("y", h / 200 )
           .attr("width", w/ 10)
           .attr("height", h / 20)
-          .attr("fill", "#61b3d0")
+          .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)
-          .attr('stroke', '#2378ae')
+          .attr('stroke', '#ffffff')
+          .attr('stroke-opacity', .5)
           .attr('stroke-width', '1')
           .attr("rx", 4)
           .on('mouseenter', function(d, i) {
@@ -196,7 +200,7 @@ function drawButtons(w1, h2 ) {
              
                if (clickedparty.length){
                 d3.select('#Democrat')
-                .style("fill", "#61b3d0")
+                .style("fill", "#6C6EA0")
                 .style("fill-opacity", .6)  
               }
 
@@ -287,7 +291,7 @@ function drawButtons(w1, h2 ) {
               }
              
              d3.select(this)
-              .style("fill", "#004d99")
+              .style("fill", "#A1A2C2")
               .style("fill-opacity", .6);
 
             clickedparty = party
@@ -310,7 +314,7 @@ function drawButtons(w1, h2 ) {
           else { // it had been clicked
 
             d3.select(this)
-              .style("fill", "#61b3d0")
+              .style("fill", "#6C6EA0")
               .style("fill-opacity", .6)  
 
             clickedparty = "" 

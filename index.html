@@ -114,7 +114,7 @@ var scatter = graphSvg.append("g")
 var barMargin = {top: 20, right: 20, bottom: 160, left: 250},
  dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
     barW = dim - barMargin.left - barMargin.right,
-    barH = dim - barMargin.top - margin.bottom;
+    barH = dim - barMargin.top - barMargin.bottom;
 
 parties = [{party: "Republicans", count: 0}, {party: "Democrat", count: 0}]
 
@@ -146,16 +146,18 @@ barSVG.selectAll(".bar")
 
 // add the x Axis
 var xAxisHandleForUpdate = barSVG.append("g")
+    .attr("class", "barx")
     .attr("transform", "translate(0," + barH + ")")
     .call(d3.axisBottom(barX));
 
 // add the y Axis
 var yAxisHandleForUpdate = barSVG.append("g")
+    .attr("class", "bary")
     .call(d3.axisLeft(barY));
 
 var xAxis = null;
 var yAxis = null;
-// var brush = null;
+
 /*
 ######################################## 
 #                                      #
@@ -312,7 +314,7 @@ slider.onChange(function(newRange){
         .size();
       
       d3.select("#range-label").text("Democrats: " + dems + " Republicans: " + gop);
-      updateBars(w, h, partyCount());
+      updateBars(partyCount());
 });
 
 function scaleSlider(begin, end) {
@@ -363,7 +365,10 @@ function partyCount() {
 
 // http://bl.ocks.org/josiahdavis/a3534073492ca37b3682
 
-var updateBars = function(w, h, count) {
+var updateBars = function(count) {
+    var dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+      barW = dim - barMargin.left - barMargin.right,
+      barH = dim - barMargin.top - barMargin.bottom;
     var dems = count.dems;
     var gop = count.gop;
 
@@ -379,24 +384,42 @@ var updateBars = function(w, h, count) {
     bars
       .transition().duration(250)
       .attr("y", function(d,i) { return barY(d.count); })
-      .attr("height", function(d,i) { return barH - barY(d.count); })
-      .append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", function(d) { return barX(d.party); })
-        .attr("y", function(d) { return barX(d.count) - 10; })
-        .text(function(d) { return barX(d.count); });
+      .attr("height", function(d,i) { return barH - barY(d.count); });
+      // .append("text")
+      //   .attr("text-anchor", "middle")
+      //   .attr("x", function(d) { return barX(d.party); })
+      //   .attr("y", function(d) { return barX(d.count) - 10; })
+      //   .text(function(d) { return barX(d.count); });
 
     // Remove old ones
     bars.exit().remove();
 };
 
-function redraw(){
+function redraw() {
 
-var margin = {top: 20, right: 20, bottom: 160, left: 60},
- dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
-    w = dim - margin.left - margin.right,
-    h = dim - margin.top - margin.bottom;
+  var margin = {top: 20, right: 20, bottom: 160, left: 60},
+   dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
+      w = dim - margin.left - margin.right,
+      h = dim - margin.top - margin.bottom;
 
+    var dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+      barW = dim - barMargin.left - barMargin.right,
+      barH = dim - barMargin.top - barMargin.bottom;
+
+  barX.range([0, barW]);
+  barY.range([barH, 0]);
+
+  barSVG.select(".barx")
+    .call(d3.axisBottom(barX))
+    .attr("transform", "translate(0," + barH + ")");
+
+  barSVG.select(".bary")
+    .call(d3.axisLeft(barY));
+
+  barSVG.selectAll(".bar")
+    .attr("width", barX.bandwidth())
+    .attr("y", function(d) { return barY(d.count); })
+    .attr("height",function(d) { return barH - barY(d.count); });
 
   xScale.range([0, w]);
   yScale.range([h, 0]);

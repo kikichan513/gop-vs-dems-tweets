@@ -12,9 +12,14 @@ https://gist.github.com/weiglemc/6185069
 
 Todos:
 
-- Make graph responsive [kiki]
-- Nice website [kiki]
-- selecting nodes [kiki]
-- Make bar graph [tati]
+- selecting nodes and have tooltip stay[kiki]
 - Fix number in slider after zoom [tati]
-- 
+- Move buttons to left side 
+- Data wrangle () [kiki]
+- Move slider with scatterplot [tati]
+- Fix zoom [tati]
+- fix bar graph position [kiki]
+- move slider down [kiki]
+- make bar graph responsive [tati]
+- make scatterplot responsive - done
+- make zoom responsive to resize

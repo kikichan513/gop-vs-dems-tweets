@@ -10,12 +10,12 @@
 */
 
 // the w1 and h2 are not used 
-function drawButtons(w1, h2 ) {
+function drawButtons() {
 
     console.log('resize')
-    var w = window.innerWidth - 100;
+    // var w = window.innerWidth - 250;
     var h = window.innerHeight;
-
+    var w = 900;
     function removeByValue(array, value){
       return array.filter(function(elem, _index){
           return value != elem;
@@ -89,9 +89,9 @@ function drawButtons(w1, h2 ) {
           })
           .on("click", filterIssue);
     buttons.append("text")
-            //.text('Incarceration')
-            .attr('x', w / 7.5)
-            .attr('y', window.innerHeight * .05)
+            .text('Incarceration')
+            .attr("x", w /6.5 )
+            .attr('y', window.innerHeight * .04)
             .attr('fill', 'black');
             
     // Immigration
@@ -115,9 +115,9 @@ function drawButtons(w1, h2 ) {
           })
           .on("click", filterIssue);
     buttons.append("text")
-       //     .text('Immigration')
-            .attr('x', w / 2.8)
-            .attr('y', window.innerHeight * .05)
+            .text('Immigration')
+            .attr('x', w / 3.8)
+            .attr('y', window.innerHeight * .04)
             .attr('fill', 'black');
 
     // Abortion
@@ -142,9 +142,9 @@ function drawButtons(w1, h2 ) {
           })
           .on("click", filterIssue);
     buttons.append("text")
-         //   .text('Abortion')
-            .attr('x', w / 1.93)
-            .attr('y', window.innerHeight * .05)
+            .text('Abortion')
+            .attr('x', w / 2.6)
+            .attr('y', window.innerHeight * .04)
             .attr('fill', 'black');
 
     // GunControl
@@ -168,9 +168,9 @@ function drawButtons(w1, h2 ) {
           })
           .on("click", filterIssue);
     buttons.append("text")
-          //  .text('Gun control')
-            .attr('x', w / 1.49)
-            .attr('y', window.innerHeight * .05)
+            .text('Gun control')
+            .attr('x', w / 2.06)
+            .attr('y', window.innerHeight * .04)
             .attr('fill', 'black');
 
 
@@ -259,9 +259,9 @@ function drawButtons(w1, h2 ) {
          
 
     buttons.append("text")
-       //     .text('Rep')
-            .attr('x', w / 1.10)
-            .attr('y', window.innerHeight * .05)
+            .text('GOP')
+           .attr("x", w / 1.67)
+            .attr('y', window.innerHeight * .04)
             .attr('fill', 'black');
 
     buttons.append("rect")
@@ -335,29 +335,9 @@ function drawButtons(w1, h2 ) {
           })
          
     buttons.append("text")
-           // .text('Dem')
-            .attr('x', w / .95)
-            .attr('y', window.innerHeight * .05)
+            .text('DNC')
+            .attr("x", w / 1.53)
+            .attr('y', window.innerHeight * .04)
             .attr('fill', 'black');
 }
 
-function resize(){
-    var w = window.innerWidth - 100;
-    var h = window.innerHeight;
-   d3.select('#Incarceration').attr("x", w /7 )
-             .attr("width", w/ 9);
-   d3.select('#Immigration').attr("x", w / 4)
-   .attr("width", w/ 9);
-   d3.select('#Abortion').attr("x", w / 2.8)
-   .attr("width", w/ 9);
-   d3.select('#GunControl').attr("x", w / 2.15)
-   .attr("width", w/ 9);
-   d3.select('#Republican').attr("x", w / 1.7)
-   .attr("width", w/ 20)
-   d3.select('#Democrat').attr("x", w / 1.55)
-   .attr("width", w/ 20)
-}
-
-
-
-window.addEventListener("resize", resize);

@@ -61,16 +61,23 @@ svg {
   height: 25px; 
   width: 60%;
   position: absolute;
-  bottom: 50px;
+  bottom: 100px;
   left: 40px;
 }
 
 #range-label{
   height: 25px; 
-  width: 85%;
+  width: 300px;
   position: absolute;
   bottom: 20px;
-  left: 40px;
+  left: 100px;
+}
+#democrat-range{
+  float:left;
+  margin-right: 30px;
+}
+#republican-range{
+  float:right;
 }
 #container {
   width: 100%;

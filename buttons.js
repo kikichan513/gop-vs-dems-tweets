@@ -13,7 +13,7 @@
 function drawButtons(w1, h2 ) {
 
     console.log('resize')
-    var w = window.innerWidth;
+    var w = window.innerWidth - 100;
     var h = window.innerHeight;
 
     function removeByValue(array, value){
@@ -342,8 +342,8 @@ function drawButtons(w1, h2 ) {
 }
 
 function resize(){
-   var w = window.innerWidth;
-   var h = window.innerHeight;
+    var w = window.innerWidth - 100;
+    var h = window.innerHeight;
    d3.select('#Incarceration').attr("x", w /7 )
              .attr("width", w/ 9);
    d3.select('#Immigration').attr("x", w / 4)

@@ -22,7 +22,11 @@
 
       <div id="scatterplot">
         <div id="slider-container"></div>
-        <div id="range-label"></div>
+        <div id="range-label">
+    
+          <div id="democrat-range">Democrat: 0 </div> 
+          <div id="republican-range">Republican: 0 </div>
+        </div>
       </div>
 
       <div id="bar"></div>
@@ -42,7 +46,7 @@ var funhash=function(s) {
 /*
 ######################################## 
 #                                      #
-#         SET UP GRAPH                 #
+#         SET UP SCATTER               #
 #                                      #
 ########################################*/
 d3.selectAll("svg > *").remove();
@@ -99,7 +103,12 @@ var clip = graphSvg.append("defs").append("clipPath")
 var scatter = graphSvg.append("g")
            .attr("id", "scatterplot")
            .attr("clip-path", "url(#clip)");
-// BAR
+/*
+######################################## 
+#                                      #
+#         SET UP BAR                   #
+#                                      #
+########################################*/
 var barMargin = {top: 20, right: 20, bottom: 160, left: 250},
  dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
     barW = dim - barMargin.left - barMargin.right,
@@ -371,6 +380,11 @@ function redraw() {
     .attr("transform", "translate(0," + barH + ")");
   barSVG.select(".bary")
     .call(d3.axisLeft(barY));
+
+  barSVG.select("#bar")
+    .attr("width", barW + barMargin.left + barMargin.right)
+    .attr("height", barH + barMargin.top + barMargin.bottom);
+
   barSVG.selectAll(".bar")
     .attr("width", barX.bandwidth())
     .attr("y", function(d) { return barY(d.count); })

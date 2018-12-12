@@ -270,7 +270,7 @@ function drawButtons(w1, h2 ) {
           .attr("y", h / 200 )
           .attr("width", w/ 20)
           .attr("height", h / 20)
-          .style("fill", "#0099cc")
+          .style("fill", "#2D6D95")
           .style("fill-opacity", .6)
           .attr("rx", 20)
           .attr("ry", 20)

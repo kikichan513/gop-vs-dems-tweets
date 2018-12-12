@@ -1,11 +1,11 @@
 .slider-container {
-    background-color: #DCDCDC;
+    background-color: #C9CADC;
 }
 
 .slider {
     position: absolute;
     border: 1px solid #AAB;
-    background: #BCE;
+    background: #9495B9;
     height: 100%;
     width: 50%;
     top: 0px;
@@ -19,7 +19,7 @@
     height: 9px;
     width: 9px;
     border: 1px solid #AAB;
-    background: #9AC;
+    background: #595B83;
 
     /* Support for bootstrap */
     box-sizing: border-box;

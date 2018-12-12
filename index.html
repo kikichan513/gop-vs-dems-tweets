@@ -30,7 +30,6 @@
 
   </div>
 <script src="http://d3js.org/d3.v4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 <script src="d3-tip.js"></script>
 <script src="buttons.js"></script>
 <script src="slider/d3RangeSlider.js"></script>
@@ -79,7 +78,7 @@ var graphSVG = d3.select("#scatterplot").append("svg")
     .attr("width", w + margin.left + margin.right)
     .attr("height", h + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var tooltip = d3.tip()
     .attr("class", "d3-tip")
@@ -97,6 +96,7 @@ var clip = graphSVG.append("defs").append("clipPath")
             .attr("y", 0)
             .attr("transform", "translate(0,-20)") // fixes a bug where 
             .attr("height", h+20);                // top of scatterplot was cut off
+
 var scatter = graphSVG.append("g")
            .attr("id", "scatterplot")
            .attr("clip-path", "url(#clip)");
@@ -371,7 +371,7 @@ var updateBars = function(count) {
     bars.exit().remove();
 };
 function redraw() {
-  let brushSel = graphSVG.append('g').call(brush);
+  let brushSel = scatter.append('g').call(brush);
 
   var margin = {top: 20, right: 20, bottom: 160, left: 60},
    dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
@@ -429,8 +429,7 @@ function redraw() {
         })
     .attr("cy", yMap);
 
-  brush.move(brushSel, [w, h]);
-  brushed();
+  brush.move(brushSel, [xScale(w), yScale(h)]);
 
 }
 window.addEventListener('resize', redraw);

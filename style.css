@@ -22,9 +22,10 @@ body {
   pointer-events: all;
 }
 
-svg {
+.graph {
   overflow: visible;
   pointer-events: all;
+  width: 1000px;
 }
 
  svg text {
@@ -43,11 +44,12 @@ svg {
   min-height: 300px;
   position: absolute;
   float:left;
+  overflow: hidden;
 }
 
 #bar {
   margin-top: 30px;
-  width: 55%;
+  width: 50%;
   height: 100%;
   float:right;
 }
@@ -73,13 +75,7 @@ svg {
   bottom: 20px;
   left: 100px;
 }
-#democrat-range{
-  float:left;
-  margin-right: 30px;
-}
-#republican-range{
-  float:right;
-}
+
 #container {
   width: 100%;
   margin-top:20px;
@@ -125,6 +121,9 @@ svg {
 
 @media only screen and (max-width: 790px) {
   #bar{
+    display:none;
+  }
+  #slider-container{
     display:none;
   }
 }

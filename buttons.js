@@ -177,10 +177,10 @@ function drawButtons(w1, h2 ) {
 
     buttons.append("rect")
           .attr("id", "Republican")
-          .attr("x", w * .87)
-          .attr("y", window.innerHeight * .1)
-          .attr("width", w / 8)
-          .attr("height", h / 15)
+           .attr("x", w / 1.7)
+          .attr("y", h / 200 )
+          .attr("width", w/ 20)
+          .attr("height", h / 20)
           .style("fill-opacity", .6)
           .style("fill", "#ff4040")
           .attr("rx", 20)
@@ -259,17 +259,17 @@ function drawButtons(w1, h2 ) {
          
 
     buttons.append("text")
-            .text('Rep')
+       //     .text('Rep')
             .attr('x', w / 1.10)
             .attr('y', window.innerHeight * .05)
             .attr('fill', 'black');
 
     buttons.append("rect")
           .attr("id", "Democrat")
-          .attr("x", w)
-          .attr("y", window.innerHeight * .1)
-          .attr("width", w / 8)
-          .attr("height", h / 15)
+          .attr("x", w / 1.55)
+          .attr("y", h / 200 )
+          .attr("width", w/ 20)
+          .attr("height", h / 20)
           .style("fill", "#0099cc")
           .style("fill-opacity", .6)
           .attr("rx", 20)
@@ -314,7 +314,7 @@ function drawButtons(w1, h2 ) {
           else { // it had been clicked
 
             d3.select(this)
-              .style("fill", "#6C6EA0")
+              .style("fill", "#0099cc")
               .style("fill-opacity", .6)  
 
             clickedparty = "" 
@@ -335,7 +335,7 @@ function drawButtons(w1, h2 ) {
           })
          
     buttons.append("text")
-            .text('Dem')
+           // .text('Dem')
             .attr('x', w / .95)
             .attr('y', window.innerHeight * .05)
             .attr('fill', 'black');
@@ -352,9 +352,10 @@ function resize(){
    .attr("width", w/ 9);
    d3.select('#GunControl').attr("x", w / 2.15)
    .attr("width", w/ 9);
-
-
-
+   d3.select('#Republican').attr("x", w / 1.7)
+   .attr("width", w/ 20)
+   d3.select('#Democrat').attr("x", w / 1.55)
+   .attr("width", w/ 20)
 }
 
 

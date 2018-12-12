@@ -14,7 +14,6 @@ Todos:
 
 - selecting nodes and have tooltip stay[kiki]
 - Fix number in slider after zoom [tati]
-- Move buttons to left side 
 - Data wrangle () [kiki]
 - Move slider with scatterplot [tati]
 - Fix zoom [tati]

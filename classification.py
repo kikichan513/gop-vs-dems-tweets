@@ -1,11 +1,12 @@
 import string
 import csv
+import random
 
 # strings = ["i love gun control abortion", "i hate pro choice", "fucking school shooting", "illegal citizenship", "juan loves kiki"]
 
 class Classification: 
     def __init__(self):
-        self.classification = {"Immigration": ["immigration", "immigrant", "border control", "citizenship", "asylum", "legal" "legal status", "immigration laws", "illegals", "illegal immigrants", "illegal citizens", "undocumented"], "Abortion": ["abortions", "abortion", "born alive", "pro-life", "pro-choice", "choice", "pro choice"], "GunControl":["gun", "control", "gun-control", "NRA", "school shooting", "shooting", "gun violence"], "Incarceration":["incarceration", "criminal", "prison", "jail"]}
+        self.classification = {"Immigration": ["immigration", "immigrant", "border control", "citizenship", "asylum", "legal" "legal status", "immigration laws", "illegals", "illegal immigrants", "illegal citizens", "undocumented", "deport", "#immigration","ICE", "ice", "#ICE", "caravan"], "Abortion": ["abortions", "abortion", "born alive", "pro-life", "pro-choice", "choice", "pro choice", "pro life", "killing babies", "planned parenthood", "feticide","birth", "IUD", "contraceptive", "Roe", "reproductive", "#plannedparenthood", "Medicade", "abortion"], "GunControl":["gun", "control", "gun-control", "NRA", "school shooting", "shooting", "gun", "semi-automatics", "assault", "weapons", "handgun", "#guncontrol"], "Incarceration":["incarceration", "criminal", "prison", "jail", "internment","jailed", "imprisonment", "confinement", "detention", "#incarceration", "colorblindness","#PrisonReform", "juveniles","solidarity", "policing"]}
 
     def classify(self, tweet):
         dic = dict()
@@ -30,10 +31,17 @@ def testscript():
         else:
             print ("false")
 
+def randomChoice():
+    if (random.randint(1,8)) == 2:
+        return True
+    else:
+        return False
+
 if __name__ == "__main__":
-    with open("length.csv", 'a', newline='') as newcsv:
+    with open("final.csv", 'a', newline='') as newcsv:
         writer = csv.writer(newcsv, delimiter=',')
-        writer.writerow(["Id","Party", "Handle", "Tweet", "Sentiment", "Category", "Length"])
+        writer.writerow(["Id","Party", "Handle", "Tweet", "Sentiment", "Category"])
+        maxnum = []
         with open("data.csv", "r") as f:
             issues = Classification();
             csvreader = csv.reader(f, delimiter=',')
@@ -42,9 +50,10 @@ if __name__ == "__main__":
                 for party, handle, tweet, tweet_sentiment in csvreader:
                     tweet_category = issues.classify(tweet)
                     if tweet_category and tweet_sentiment != "0.0":
-                        count+=1;
-                        tweet_length = len(tweet)
-                        writer.writerow([count, party, handle, tweet, tweet_sentiment, tweet_category, tweet_length])
+                        if len(tweet) != 140 :
+                            writer.writerow([count, party, handle, tweet, tweet_sentiment, tweet_category])                     
+                        elif randomChoice():
+                            writer.writerow([count, party, handle, tweet, tweet_sentiment, tweet_category])
             except ValueError:
                 pass
 

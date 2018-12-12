@@ -47,10 +47,10 @@ svg {
 }
 
 #bar {
-  width: 50%;
+  margin-top: 30px;
+  width: 55%;
   height: 100%;
   float:right;
-  margin-left:0px;
 }
 #buttoncontainer{
   border-top-left-radius: 35px;
@@ -73,13 +73,10 @@ svg {
   left: 40px;
 }
 #container {
-  border-radius: 35px;
   width: 100%;
-  margin: auto;
   margin-top:20px;
-  padding-bottom: 30px;
   height: 600px;
-  position: relative;
+  position: absolute;
 }
 
 .d3-tip {
@@ -115,4 +112,10 @@ svg {
 #range-label {
   font-size: 2vw;
   text-align: center;
+}
+
+@media only screen and (max-width: 790px) {
+  #bar{
+    display:none;
+  }
 }

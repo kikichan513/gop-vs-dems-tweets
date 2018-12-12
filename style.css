@@ -57,12 +57,14 @@ svg {
   border-top-right-radius: 35px;
 }
 
+
 #slider-container{
   height: 25px; 
   width: 60%;
   position: absolute;
   bottom: 100px;
   left: 40px;
+  bottom: 20px;
 }
 
 #range-label{
@@ -94,6 +96,7 @@ svg {
   border-radius: 2px;
   width: 150px;
   z-index: 2;
+  cursor: default;
 }
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {

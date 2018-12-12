@@ -74,7 +74,7 @@ var yValue = function(d) { return d["Tweet"].length; }, // data -> value
 var cValue = function(d) { return d["Party"];}, 
     colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#66C7F4"}};
 // adds svg to the html dom
-var graphSvg = d3.select("#scatterplot").append("svg")
+var graphSVG = d3.select("#scatterplot").append("svg")
     .attr("class", "graph")
     .attr("width", w + margin.left + margin.right)
     .attr("height", h + margin.top + margin.bottom)
@@ -87,9 +87,9 @@ var tooltip = d3.tip()
     .html(function(d) {
       return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
     }); 
-graphSvg.call(tooltip);     
+graphSVG.call(tooltip);     
 
-var clip = graphSvg.append("defs").append("clipPath")
+var clip = graphSVG.append("defs").append("clipPath")
             .attr("id", "clip")
             .append("rect")
             .attr("width", w)
@@ -97,7 +97,7 @@ var clip = graphSvg.append("defs").append("clipPath")
             .attr("y", 0)
             .attr("transform", "translate(0,-20)") // fixes a bug where 
             .attr("height", h+20);                // top of scatterplot was cut off
-var scatter = graphSvg.append("g")
+var scatter = graphSVG.append("g")
            .attr("id", "scatterplot")
            .attr("clip-path", "url(#clip)");
 /*
@@ -145,6 +145,9 @@ var yAxisHandleForUpdate = barSVG.append("g")
     .call(d3.axisLeft(barY));
 var xAxis = null;
 var yAxis = null;
+var brush = d3.brush();
+var idleTimeout;
+var idleDelay = 350;
 /*
 ######################################## 
 #                                      #
@@ -160,11 +163,11 @@ d3.csv("final.csv", function(error, data) {
   xScale.domain([-1, 1]);
   xAxis = d3.axisBottom(xScale).ticks(w / 80);
   yAxis = d3.axisLeft(yScale);
-  var brush = d3.brush().extent([[0, 0], [w, h]]).on("end", brushended),
+  brush.extent([[0, 0], [w, h]]).on("end", brushended),
           idleTimeout,
           idleDelay = 350;
   // add in x-axis
-  graphSvg.append("g")
+  graphSVG.append("g")
       .attr("class", "xaxis axis")
       .attr("transform", "translate(0," + h + ")")
       .call(xAxis)
@@ -177,7 +180,7 @@ d3.csv("final.csv", function(error, data) {
         .text("Sentiment");
       
   // Add in y axis    
-  graphSvg.append("g")
+  graphSVG.append("g")
       .attr("class", "yaxis")
       // .attr("fill-opacity", 0)
       .call(yAxis)
@@ -243,7 +246,7 @@ d3.csv("final.csv", function(error, data) {
      }
   });
   dots.on('mousedown', function(){
-    brush_elm = graphSvg.select(".brush").node();
+    brush_elm = graphSVG.select(".brush").node();
     new_click_event = new Event('mousedown');
     new_click_event.pageX = d3.event.pageX;
     new_click_event.clientX = d3.event.clientX;
@@ -257,10 +260,12 @@ d3.csv("final.csv", function(error, data) {
       if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
       xScale.domain(d3.extent(data, xValue)).nice();
       yScale.domain(d3.extent(data, yValue)).nice();
+      d3.select("#slider-container").style("opacity", 1);
     } else {
       xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
       yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
-      graphSvg.select(".brush").call(brush.move, null);
+      graphSVG.select(".brush").call(brush.move, null);
+      d3.select("#slider-container").style("opacity", 0);
       }
     zoom();
   }
@@ -268,10 +273,10 @@ d3.csv("final.csv", function(error, data) {
       idleTimeout = null;
   }
   function zoom() {
-    var t = graphSvg.transition().duration(2500);
-    graphSvg.select(".xaxis").transition(t).call(xAxis);
-    graphSvg.select(".yaxis").transition(t).call(yAxis);
-    graphSvg.selectAll(".dot").transition(t)
+    var t = graphSVG.transition().duration(2500);
+    graphSVG.select(".xaxis").transition(t).call(xAxis);
+    graphSVG.select(".yaxis").transition(t).call(yAxis);
+    graphSVG.selectAll(".dot").transition(t)
       .attr("cx", xMap)
       .attr("cy", yMap);
   }
@@ -366,13 +371,18 @@ var updateBars = function(count) {
     bars.exit().remove();
 };
 function redraw() {
+  let brushSel = graphSVG.append('g').call(brush);
+
   var margin = {top: 20, right: 20, bottom: 160, left: 60},
    dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
       w = dim - margin.left - margin.right,
       h = dim - margin.top - margin.bottom;
-    var dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
-      barW = dim - barMargin.left - barMargin.right,
-      barH = dim - barMargin.top - barMargin.bottom;
+
+  var dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+    barW = dim - barMargin.left - barMargin.right,
+    barH = dim - barMargin.top - barMargin.bottom;
+
+  // Resize bar chart  
   barX.range([0, barW]);
   barY.range([barH, 0]);
   barSVG.select(".barx")
@@ -389,25 +399,27 @@ function redraw() {
     .attr("width", barX.bandwidth())
     .attr("y", function(d) { return barY(d.count); })
     .attr("height",function(d) { return barH - barY(d.count); });
+
+  // Resize scatterplot
   xScale.range([0, w]);
   yScale.range([h, 0]);
-  graphSvg.select(".xaxis")
+  graphSVG.select(".xaxis")
       .attr("transform", "translate(0," + h + ")")
       .call(xAxis);
 
-  graphSvg.selectAll(".x-axis-label")
+  graphSVG.selectAll(".x-axis-label")
     .attr("x", w / 2)
     .attr("y", h / 13);
 
-  graphSvg.select(".yaxis")
+  graphSVG.select(".yaxis")
       .call(yAxis);
 
-  graphSvg.selectAll(".y-axis-label")
+  graphSVG.selectAll(".y-axis-label")
     .attr("x", w /2.5 * -1)
     .attr("y", -30);
 
   xAxis.ticks(w / 80);
-  graphSvg.selectAll('.dot')
+  graphSVG.selectAll('.dot')
     .attr("cx", function(d) {
           if (xMap(d)) {
             return xMap(d);
@@ -416,8 +428,10 @@ function redraw() {
           }
         })
     .attr("cy", yMap);
-    // brush = d3.brush().extent([[0, 0], [w, h]]);
-    // scatter.select('.brush').call(brush);
+
+  brush.move(brushSel, [w, h]);
+  brushed();
+
 }
 window.addEventListener('resize', redraw);
 </script>

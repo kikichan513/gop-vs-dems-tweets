@@ -61,7 +61,7 @@ var margin = {top: 20, right: 20, bottom: 160, left: 60},
 // domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
 // set up x
 var xValue = function(d) { return d["Sentiment"];}, // data -> value
-    xScale = d3.scaleLinear().range([0,w]), // value -> display 
+    xScale = d3.scaleLinear().range([0,w * 1.2]), // value -> display 
     xMap = function(d) { return xScale(xValue(d));}; // data -> display
    
 // setup y
@@ -75,8 +75,8 @@ var cValue = function(d) { return d["Party"];},
 // adds svg to the html dom
 var graphSVG = d3.select("#scatterplot").append("svg")
     .attr("class", "graph")
-    .attr("width", w + margin.left + margin.right)
-    .attr("height", h + margin.top + margin.bottom)
+    .attr("width", 1000)
+    .attr("height", 1000)
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -91,7 +91,7 @@ graphSVG.call(tooltip);
 var clip = graphSVG.append("defs").append("clipPath")
             .attr("id", "clip")
             .append("rect")
-            .attr("width", w)
+            .attr("width", w * 1.2)
             .attr("x", 0) 
             .attr("y", 0)
             .attr("transform", "translate(0,-20)") // fixes a bug where 
@@ -106,7 +106,7 @@ var scatter = graphSVG.append("g")
 #         SET UP BAR                   #
 #                                      #
 ########################################*/
-var barMargin = {top: 20, right: 20, bottom: 160, left: 250},
+var barMargin = {top: 20, right: 20, bottom: 160, left: 270},
  dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
     barW = dim - barMargin.left - barMargin.right,
     barH = dim - barMargin.top - barMargin.bottom;
@@ -173,7 +173,7 @@ d3.csv("final.csv", function(error, data) {
       .call(xAxis)
       .append("text")
         .attr("class", "label x-axis-label")
-        .attr("x", w / 2)
+        .attr("x", w / 1.67)
         .attr("y", h / 13)
         .attr("fill", "black")
         .style("text-anchor", "middle")
@@ -401,7 +401,7 @@ function redraw() {
     .attr("height",function(d) { return barH - barY(d.count); });
 
   // Resize scatterplot
-  xScale.range([0, w]);
+  xScale.range([0, w * 1.2]);
   yScale.range([h, 0]);
   graphSVG.select(".xaxis")
       .attr("transform", "translate(0," + h + ")")

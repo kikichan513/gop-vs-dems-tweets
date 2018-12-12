@@ -52,6 +52,7 @@ body {
   width: 50%;
   height: 100%;
   float:right;
+  display: inline-block;
 }
 #buttoncontainer{
   border-top-left-radius: 35px;
@@ -61,11 +62,10 @@ body {
 
 #slider-container{
   height: 25px; 
-  width: 60%;
+  width: 640px;
   position: absolute;
   bottom: 100px;
-  left: 40px;
-  bottom: 20px;
+  left: 55px;
 }
 
 #range-label{
@@ -119,7 +119,7 @@ body {
   text-align: center;
 }
 
-@media only screen and (max-width: 790px) {
+@media only screen and (max-width: 900px) {
   #bar{
     display:none;
   }

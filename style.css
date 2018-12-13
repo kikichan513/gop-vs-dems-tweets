@@ -54,11 +54,19 @@ body {
   float:right;
   display: inline-block;
 }
-#buttoncontainer{
+#buttons{
+
   border-top-left-radius: 35px;
   border-top-right-radius: 35px;
 }
 
+#buttoncontainer{
+  width: 700px;
+  padding-top:20px;
+  border-radius: 10px;
+  margin-left:20px;
+  border: 1px solid black;
+}
 
 #slider-container{
   height: 25px; 
@@ -120,7 +128,7 @@ body {
   text-align: center;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 970px) {
   #bar{
     display:none;
   }

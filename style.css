@@ -71,7 +71,10 @@ body {
 
 #buttoncontainer{
   width: 700px;
+  margin-bottom: -20px;
+  margin-top: -30px;
   margin-left:20px;
+
 }
 
 #slider-container{
@@ -152,6 +155,7 @@ height: 25px;
   font-family: futura;
   font-size:13px;
   font-style: italic;
+  margin-top: -20px;
 
 }
 #range-label {

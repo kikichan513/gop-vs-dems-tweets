@@ -103,7 +103,7 @@ var tooltip = d3.tip()
     .attr("class", "d3-tip")
     .offset([-10, 0])
     .html(function(d) {
-      return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> Sentiment: " + xValue(d) + "";
+      return "<font color=\"#c5e3ed\">@" + d["Handle"] + "<font color=\"white\"><br><br>" + d["Tweet"] + "<br/><br/> <i>Sentiment: " + xValue(d) + "</i>";
     }); 
 graphSVG.call(tooltip);     
 
@@ -180,6 +180,7 @@ var yAxis = null;
 var brush = d3.brush();
 var idleTimeout;
 var idleDelay = 350;
+var graphTitle = null;
 /*
 ######################################## 
 #                                      #
@@ -287,7 +288,7 @@ d3.csv("final.csv", function(error, data) {
      }
   });
 
-  graphSVG.append("text")
+  graphTitle = graphSVG.append("text")
     .attr("class", "label graph-label")
     .attr("x", w / 1.67)
     .attr("y", h * 1.15)
@@ -296,6 +297,7 @@ d3.csv("final.csv", function(error, data) {
     .style("font-family", "futura")
     .style("font-size", "1.7em")
     .text("Tweet Sentiment Scatterplot")
+
   dots.on('mousedown', function(){
     brush_elm = graphSVG.select(".brush").node();
     new_click_event = new Event('mousedown');
@@ -429,7 +431,8 @@ function redraw() {
       w = dim - margin.left - margin.right,
       h = dim - margin.top - margin.bottom;
 
-  var dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+  barMargin = {top: w * .016, right: w * .016, bottom: w * .2, left: w * .523},
+  dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
     barW = dim - barMargin.left - barMargin.right,
     barH = dim - barMargin.top - barMargin.bottom;
 
@@ -459,7 +462,7 @@ function redraw() {
       .call(xAxis);
 
   graphSVG.selectAll(".x-axis-label")
-    .attr("x", w / 2)
+    .attr("x", w / 1.67)
     .attr("y", h / 13);
 
   graphSVG.select(".yaxis")
@@ -468,6 +471,10 @@ function redraw() {
   graphSVG.selectAll(".y-axis-label")
     .attr("x", w /2.5 * -1)
     .attr("y", -30);
+
+  graphTitle
+    .attr("x", w / 1.67)
+    .attr("y", h * 1.15);
 
   xAxis.ticks(w / 80);
   graphSVG.selectAll('.dot')

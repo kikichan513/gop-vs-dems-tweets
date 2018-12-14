@@ -85,6 +85,7 @@ d3.tip = function() {
           return d.Tweet == curr.Tweet;
         })
       .attr("r", 4)
+      .on("mouseout", null)
       .style("fill", function(d) { return resetColour(d.Party);} );
     return tip
   }

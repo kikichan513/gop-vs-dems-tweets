@@ -38,7 +38,6 @@ function drawButtons() {
                 d3.selectAll(".dot").filter( d => {
                 return !clicked.includes(d.Category)}).style("opacity", .2);
               }else { // a party filter has been applied
-                console.log("a party filter has been applied")
                 d3.selectAll(".dot").filter( d => {
                 return (!clicked.includes(d.Category)|| d.Party != clickedparty)}).style("opacity", .2);
               }
@@ -201,7 +200,6 @@ function drawButtons() {
           .on("click", function (d){
 
             party = this.id
-            console.log(party);
 
             if (clickedparty != party){ // not been clicked yet
              
@@ -215,22 +213,17 @@ function drawButtons() {
               .style("fill-opacity", 1)
               .on('mouseout',null);
 
-
-            console.log("clickedparty != party")
             clickedparty = party
 
             d3.selectAll(".dot").style("opacity", .8);
 
             if (clicked.length > 0){
               // an issue has been filtered
-              console.log(" an issue has been filtered")
-              console.log(clicked)
               d3.selectAll(".dot").filter(function(d) { 
               
               return (d.Party != clickedparty || !clicked.includes(d.Category))}).style("opacity", .2);
             }
             else {
-              console.log(" no issue has been filtered")
               d3.selectAll(".dot").filter(function(d) { 
               return (d.Party != clickedparty)}).style("opacity", .2);
             }
@@ -244,21 +237,16 @@ function drawButtons() {
             d3.select(this).style('fill-opacity', .6);
           })
 
-            console.log("clickedparty == party")
-
             clickedparty = "" 
 
             // if an issue has been clicked, remove the filter of party to show both rep dems on the issue(s) filtered
             if (clicked.length > 0){
               d3.selectAll(".dot").style("opacity", .8);
-
-              console.log("remove filter on party, other issues present")
               d3.selectAll(".dot").filter( d => {
               return !clicked.includes(d.Category)}).style("opacity", .2);
             }
             // if there is no issue filtered on, return to normal
             else {
-              console.log("remove filter on party, no issues present")
               d3.selectAll(".dot").style("opacity", .8);
             }
 
@@ -339,7 +327,6 @@ function drawButtons() {
             }
             // if there is no issue filtered on, return to normal
             else {
-            //  console.log("remove filter on party, no issues present")
               d3.selectAll(".dot").style("opacity", .8);
             }
 

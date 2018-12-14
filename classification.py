@@ -6,7 +6,26 @@ import random
 
 class Classification: 
     def __init__(self):
-        self.classification = {"Immigration": ["immigration", "immigrant", "border control", "citizenship", "asylum", "legal" "legal status", "immigration laws", "illegals", "illegal immigrants", "illegal citizens", "undocumented", "deport", "#immigration","ICE", "ice", "#ICE", "caravan"], "Abortion": ["abortions", "abortion", "born alive", "pro-life", "pro-choice", "choice", "pro choice", "pro life", "killing babies", "planned parenthood", "feticide","birth", "IUD", "contraceptive", "Roe", "reproductive", "#plannedparenthood", "Medicade", "abortion"], "GunControl":["gun", "control", "gun-control", "NRA", "school shooting", "shooting", "gun", "semi-automatics", "assault", "weapons", "handgun", "#guncontrol"], "Incarceration":["incarceration", "criminal", "prison", "jail", "internment","jailed", "imprisonment", "confinement", "detention", "#incarceration", "colorblindness","#PrisonReform", "juveniles","solidarity", "policing"]}
+        self.classification = {"Immigration": ["immigration", "immigrant", "border control", "citizenship", 
+        "asylum", "legal" "legal status", "immigration laws", "illegals", "illegal immigrants",
+         "illegal citizens", "undocumented", "deport", "#immigration","ICE", "ice", "#ICE", "caravan",
+         "immigrate", "#DACA", "DREAM", "DREAMER", "#DREAMER", "DREAM act", "#ProtectDREAMers", "caravans",
+         "illegal immigrant"], 
+        "Abortion": ["abortions", "abortion", "born alive", "pro-life", "pro-choice",
+         "pro choice", "pro life", "killing babies", "planned parenthood", "feticide","birth",
+          "IUD", "contraceptive", "Roe", "reproductive", "#plannedparenthood", "Medicade", "abortion",
+          "women's health", "roevwade", "#roevwade", "contraception", "reproductive", "reproductive health",
+          "unborn", "planned parenthood" "late-term", "born-alive", "hyde amendment", "#reprorights",
+          "#prolife", "#pro-life", "#prochoice", "pro-choice", "#abortions", "#abortion", "#unplannedparenthood",
+          "#marchforlife", "march for life", "reprorights", "#reproductiverights", "@CecileRichards",
+          "pro-abortion", "pro abortion"],
+         "GunControl":["gun", "control", "gun-control", "NRA", "school shooting", "shooting",
+          "gun", "semi-automatics", "assault", "weapons", "handgun", "#guncontrol", "second amendment",
+          "2ndamendment", "secondamendment", "#bigguns", "#gunlobby", "concealed carry", "gun show",
+          "#concealedcarry"], 
+         "Incarceration":["incarceration", "criminal", "prison", "jail", "internment","jailed", 
+         "imprisonment", "confinement", "detention", "#incarceration", "colorblindness","#PrisonReform",
+          "juveniles","solidarity", "policing", "recidivism", "convict", "convicted", "#reentry"]}
 
     def classify(self, tweet):
         dic = dict()

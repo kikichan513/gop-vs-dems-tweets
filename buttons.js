@@ -27,8 +27,9 @@ function drawButtons() {
             if (!clicked.includes(category)){ // havent been clicked before
               
               d3.select(this)
-              .style("fill", "#A1A2C2")
-              .style("fill-opacity", .6);
+//              .style("fill", "#A1A2C2")
+              .style("fill-opacity", 1)
+              .on('mouseleave', null);
 
               clicked.push(category);
 
@@ -46,8 +47,11 @@ function drawButtons() {
             else { 
 
               d3.select(this)
-              .style("fill", "#6C6EA0")
+            //  .style("fill", "#6C6EA0")
               .style("fill-opacity", .6)  
+              .on('mouseleave', function(d, i) {
+              d3.select(this).style('fill-opacity', .6);
+            })
 
               clicked = removeByValue(clicked,category)
               if (clicked.length){
@@ -189,7 +193,7 @@ function drawButtons() {
           .attr("rx", 20)
           .attr("ry", 20)
           .on('mouseover', function(d, i) {
-            d3.select(this).style('fill-opacity', .8);
+            d3.select(this).style('fill-opacity', 1);
           }) 
           .on('mouseout', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
@@ -208,8 +212,8 @@ function drawButtons() {
               }
 
              d3.select(this)
-              .style("fill", "#8e0000")
-              .style("fill-opacity", .6);
+              .style("fill-opacity", 1)
+              .on('mouseout',null);
 
 
             console.log("clickedparty != party")
@@ -235,8 +239,10 @@ function drawButtons() {
           else { // it had been clicked
 
              d3.select(this)
-            .style("fill", "#ff4040")
-            .style("fill-opacity", .6);
+            .style("fill-opacity", .6)
+            .on('mouseout', function(d, i) {
+            d3.select(this).style('fill-opacity', .6);
+          })
 
             console.log("clickedparty == party")
 
@@ -276,11 +282,11 @@ function drawButtons() {
           .attr("width", w/ 8)
           .attr("height", h / 17)
           .style("fill", "#2D6D95")
-          .style("fill-opacity", .7)
+          .style("fill-opacity", .6)
           .attr("rx", 20)
           .attr("ry", 20)
           .on('mouseover', function(d, i) {
-            d3.select(this).style('fill-opacity', .8);
+            d3.select(this).style('fill-opacity', 1);
           }) 
           .on('mouseout', function(d, i) {
             d3.select(this).style('fill-opacity', .6);
@@ -296,8 +302,8 @@ function drawButtons() {
               }
              
              d3.select(this)
-              .style("fill", "#A1A2C2")
-              .style("fill-opacity", .6);
+              .style("fill-opacity", 1)
+              .on('mouseout', null);
 
             clickedparty = party
 
@@ -319,8 +325,10 @@ function drawButtons() {
           else { // it had been clicked
 
             d3.select(this)
-              .style("fill", "#0099cc")
               .style("fill-opacity", .6)  
+              .on('mouseout', function(d, i) {
+            d3.select(this).style('fill-opacity', .6);
+          });
 
             clickedparty = "" 
             // if an issue has been clicked, remove the filter of party to show both rep dems on the issue(s) filtered

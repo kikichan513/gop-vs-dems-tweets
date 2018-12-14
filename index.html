@@ -1,138 +1,471 @@
+<!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
+<!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
+<!-- Coding style based on http://gist.github.com/mbostock/5977197 -->
+<!-- Zoom based on https://bl.ocks.org/EfratVil/d956f19f2e56a05c31fb6583beccfda7 -->
+
 <!DOCTYPE html>
 <html>
-<title>W3.CSS Template</title>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="style/style.css">
-
+<style>
+</style>
+<link href="slider/d3RangeSlider.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+<h1>
+    Democrat and Republican Tweet Sentiment Analysis
+</h1>
 <body>
 
-<!-- Navbar (sit on top) -->
-<div class="w3-top">
-  <div class="w3-bar" id="myNavbar">
-    <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
-      <i class="fa fa-bars"></i>
-    </a>
-    <a href="#home" class="w3-bar-item w3-button">HOME</a>
-    <a href="#about" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-user"></i> ABOUT</a>
-    <a href="#contact" class="w3-bar-item w3-button w3-hide-small"><i class="fa fa-envelope"></i> CONTACT</a>
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red">
-      <i class="fa fa-search"></i>
-    </a>
-  </div>
 
-  <!-- Navbar on small screens -->
-  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium">
-    <a href="#about" class="w3-bar-item w3-button" onclick="toggleFunction()">ABOUT</a>
-    <a href="#contact" class="w3-bar-item w3-button" onclick="toggleFunction()">CONTACT</a>
-    <a href="#" class="w3-bar-item w3-button">SEARCH</a>
-  </div>
-</div>
+  <div id="container">
+      <div id = buttoncontainer>
+         <div id="buttons"> </div> 
+      <div id="zoom-instruction"> Click and drag to zoom<br>Hover to view tweet</div>
 
-<!-- First Parallax Image with Logo Text -->
-<div class="bgimg-1 w3-display-container w3-opacity-min" id="home">
-  <img src="https://sg.fiverrcdn.com/photos/12807089/original/5890840152eb167cb02f837983ece71436fda4be.jpg?1509838072" alt="Italian Trulli" style="width: 100%;">
-
-  <div class="w3-display-middle" style="white-space:nowrap;">
-    <a href="./home.html" style="text-decoration: none;"> <span class="w3-center w3-padding-large w3-black w3-xlarge w3-wide w3-animate-opacity"> Sentiment Analysis for Dems and GOP Tweets </span> </a> </div>
-
-</div>
-
-<!-- Container (About Section) -->
-<div class="w3-content w3-container w3-padding-64" id="about">
-  <h3 class="w3-center">ABOUT THIS VISUALIZATION</h3>
-  <p class="w3-center"><em> Tweets have become a powerful platforms to spread political news </em></p>
-  <p>Twitter has become a place where politicians on both the GOP and the Democratic Party come to discuss US political issues. After Twitter was caught last month “shadow-banning” Republicans, while giving Democrats unrestricted voice, the social-media giant insisted it has no political agenda. But records of its political contributions show board members, top executives and major shareholders have all given overwhelmingly to Democrats, including Hillary Clinton and Barack Obama, while snubbing Republicans and Donald Trump.
-
-</p>
-  <div class="w3-row">
-    <div class="w3-col m6 w3-center w3-padding-large">
-      <img src="./assets/react-d3-integrate.png" class="w3-round w3-image w3-opacity w3-hover-opacity-off" alt="Photo of Me" width="500" height="333">
-    </div>
-
-    <!-- Hide this text on small devices -->
-    <div class="w3-col m6 w3-hide-small w3-padding-large">
-      <p>This visualization works using D3 is a JavaScript library and framework for creating visualizations. D3 creates visualizations by binding the data and graphical elements to the Document Object Model. D3 associates (binding) the data (stuff you want to visualize) with the DOM. ... Instead, D3 provides helper functions that work at a more general level.
-      </p>
-    </div>
-  </div>
-  
-
-</div>
-
-<!-- Large grey box section linking our viz-->
-
-<div class="w3-row w3-center w3-dark-grey w3-padding-16">
-    <span class="w3-xlarge"> ENTER OUR VISUALIZATION</span><br>
-    <a href="./home.html"> Data Visualization </a>
-
-</div>
-
-<!-- Container (Contact Section) -->
-<div class="w3-content w3-container w3-padding-64" id="contact">
-  <h3 class="w3-center"> LETS TALK!</h3>
-  <p class="w3-center"><em>Feedback is valuable for improving our data visualization!</em></p>
-
-  <div class="w3-row w3-padding-32 w3-section">
-    <div class="w3-col m4 w3-container">
-      <img src="./assets/d3.jpg" class="w3-image w3-round" style="width:100%">
-    </div>
-    <div class="w3-col m8 w3-panel">
-      <div class="w3-large w3-margin-bottom">
-        <i class="fa fa-map-marker fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i> Tufts University<br>
-        <i class="fa fa-envelope fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i> Email: kikichan513@mail.com<br>
       </div>
-      
-    </div>
-  </div>
-</div>
+          
 
-<!-- Footer -->
-<footer class="w3-center w3-black w3-padding-64 w3-opacity w3-hover-opacity-off">
-  <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i> Back to the top</a>
-  <div class="w3-xlarge w3-section">
-    <i class="fa fa-facebook-official w3-hover-opacity"></i>
-    <i class="fa fa-instagram w3-hover-opacity"></i>
-    <i class="fa fa-snapchat w3-hover-opacity"></i>
-    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-    <i class="fa fa-twitter w3-hover-opacity"></i>
-    <i class="fa fa-linkedin w3-hover-opacity"></i>
+      <div id="scatterplot">
+
+        <div id="slider-container">
+            <div id="slider-name">Sentiment Range
+            <br>  <div id="brush-instruction"> <strong>→ </strong> Slide right to see the number of tweets per party in a range</div></div>
+
+        </div>
+        
+      </div>
+
+      <div id="bar"></div>
+
   </div>
-</footer>
- 
+<script src="http://d3js.org/d3.v4.min.js"></script>
+<script src="d3-tip.js"></script>
+<script src="buttons.js"></script>
+<script src="slider/d3RangeSlider.js"></script>
 <script>
-// Modal Image Gallery
-function onClick(element) {
-  document.getElementById("img01").src = element.src;
-  document.getElementById("modal01").style.display = "block";
-  var captionText = document.getElementById("caption");
-  captionText.innerHTML = element.alt;
-}
+var funhash=function(s) {
+    for(var i=0, h=1; i<s.length; i++)
+        h=Math.imul(h+s.charCodeAt(i)|0, 2654435761);
+    return (h^h>>>17)>>>0;
+};
+/*
+######################################## 
+#                                      #
+#         SET UP SCATTER               #
+#                                      #
+########################################*/
+d3.selectAll("svg > *").remove();
+drawButtons();
 
-// Change style of navbar on scroll
-window.onscroll = function() {myFunction()};
-function myFunction() {
-    var navbar = document.getElementById("myNavbar");
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-        navbar.className = "w3-bar" + " w3-card" + " w3-animate-top" + " w3-white";
-    } else {
-        navbar.className = navbar.className.replace(" w3-card w3-animate-top w3-white", "");
-    }
-}
+var margin = {top: 20, right: 20, bottom: 160, left: 60},
+ dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
+    w = dim - margin.left - margin.right,
+    h = dim - margin.top - margin.bottom;
+/* From https://gist.github.com/iperelivskiy/4110988 */
+/* 
+ * value accessor - returns the value to encode for a given data object.
+ * scale - maps value to a visual display encoding, such as a pixel position.
+ * map function - maps from data value to display value
+ * axis - sets up axis
+ */ 
+// domain vs range: https://javascript.tutorialhorizon.com/2015/01/17/d3-fundamentals-understanding-domain-range-and-scales-in-d3js/
+// set up x
+var xValue = function(d) { return d["Sentiment"];}, // data -> value
+    xScale = d3.scaleLinear().range([0,w * 1.2]), // value -> display 
+    xMap = function(d) { return xScale(xValue(d));}; // data -> display
+   
+// setup y
+var yValue = function(d) { 
+        if (d["Tweet"].length >= 130 &&  (Math.random() >= 0.5)) {
+          return 140 - Math.random() * 30;
+        } else {
+          return d["Tweet"].length; 
+        }
+      }, // data -> value
+    yScale = d3.scaleLinear().range([h, 0]), // value -> display
+    yMap = function(d) { return yScale(yValue(d));}; // data -> display
+  
+// setup fill colour
+var cValue = function(d) { return d["Party"];}, 
+    colour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#2D6D95"}};
+// adds svg to the html dom
+var graphSVG = d3.select("#scatterplot").append("svg")
+    .attr("class", "graph")
+    .attr("width", 1000)
+    .attr("height", 1000)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// Used to toggle the menu on small screens when clicking on the menu button
-function toggleFunction() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
+var tooltip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([-10, 0])
+    .html(function(d) {
+      return "<font color=\"#c5e3ed\">@" + d["Handle"] + "<font color=\"white\"><br><br>" + d["Tweet"] + "<br/><br/> <i>Sentiment: " + xValue(d) + "</i>";
+    }); 
+graphSVG.call(tooltip);     
+
+var clip = graphSVG.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", w * 1.2)
+            .attr("x", 0) 
+            .attr("y", 0)
+            .attr("transform", "translate(0,-20)") // fixes a bug where 
+            .attr("height", h + 20);                // top of scatterplot was cut off
+
+var scatter = graphSVG.append("g")
+           .attr("id", "scatterplot")
+           .attr("clip-path", "url(#clip)");
+/*
+######################################## 
+#                                      #
+#         SET UP BAR                   #
+#                                      #
+########################################*/
+var barMargin = {top: 20, right: 20, bottom: 160, left: 270},
+ dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+    barW = dim - barMargin.left - barMargin.right,
+    barH = dim - barMargin.top - barMargin.bottom;
+parties = [{party: "Republican", count: 0}, {party: "Democrat", count: 0}]
+var barX = d3.scaleBand()
+          .range([0, barW])
+          .padding(0.1);
+var barY = d3.scaleLinear()
+          .range([barH, 0]);
+var barSVG = d3.select("#bar").append("svg")
+    .attr("width", barW + barMargin.left + barMargin.right)
+    .attr("height", barH + barMargin.top + barMargin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + barMargin.left + "," + barMargin.top + ")");
+barX.domain(parties.map(function(d) { return d.party; }))
+barY.domain([0, 1500]);
+barSVG.selectAll(".bar")
+      .data(parties)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return barX(d.party); })
+      .style("fill", function(d) { return colour(d.party);}) 
+      .attr("fill-opacity", .7)
+      .attr("width", barX.bandwidth())
+      .attr("y", function(d) { return barY(d.count); })
+      .attr("height", function(d) { return barH - barY(d.count); });
+// add the x Axis
+var xAxisHandleForUpdate = barSVG.append("g")
+    .attr("class", "barx")
+    .style("font-family", "futura")
+    .style("font-size", "1.2em")
+    .attr("transform", "translate(0," + barH + ")")
+    .call(d3.axisBottom(barX))
+    .append("text")
+        .attr("class", "label x-axis-label")
+        .attr("x", w / 3.7)
+        .attr("y", h / 9)
+        .attr("fill", "black")
+        .style("text-anchor", "middle")
+        .style("font-family", "futura")
+        .style("font-size", "1.35em")
+        .text("# of Tweets in Range");
+// add the y Axis
+var yAxisHandleForUpdate = barSVG.append("g")
+    .attr("class", "bary")
+    .style("font-family", "futura")
+    .style("font-size", "1.2em")
+    .call(d3.axisLeft(barY));
+var xAxis = null;
+var yAxis = null;
+var brush = d3.brush();
+var idleTimeout;
+var idleDelay = 350;
+var graphTitle = null;
+/*
+######################################## 
+#                                      #
+#       BEGIN TO INPUT DATA            #
+#                                      #
+########################################*/
+d3.csv("tweets.csv", function(error, data) {
+  if (error) throw error;
+  data.forEach(function(d) {
+    d["Sentiment"] = + d["Sentiment"];
+  });
+  yScale.domain([d3.min(data, yValue), d3.max(data, yValue) / .99 ]);
+  xScale.domain([-1, 1]);
+  xAxis = d3.axisBottom(xScale).ticks(w / 80);
+  yAxis = d3.axisLeft(yScale);
+  brush.extent([[0, 0], [w, h]]).on("end", brushended),
+          idleTimeout,
+          idleDelay = 350;
+  // add in x-axis
+  graphSVG.append("g")
+      .attr("class", "xaxis axis")
+      .style("font-family", "futura")
+      .style("font-size", "1.2em")
+      .attr("transform", "translate(0," + h + ")")
+      .call(xAxis)
+      .append("text")
+        .attr("class", "label x-axis-label")
+        .attr("x", w / 1.67)
+        .attr("y", h / 13)
+        .attr("fill", "black")
+        .style("text-anchor", "middle")
+        .style("font-family", "futura")
+        .style("font-size", "1.2em")
+        .text("Sentiment")
+      
+  // Add in y axis    
+  graphSVG.append("g")
+      .attr("class", "yaxis")
+      .style("font-family", "futura")
+      .style("font-size", "1.2em")
+      // .attr("fill-opacity", 0)
+      .call(yAxis)
+      .append("text")
+        .style("font-family", "futura")
+        .style("font-size", "1.2em")
+        .attr("class", "label y-axis-label")
+        .attr("transform", "rotate(-90)")
+        .attr("x", w /2.5 * -1)
+        .attr("y", -35)
+        .attr("fill", "black")
+        .style("text-anchor", "middle")
+        .text("Tweet Length");
+  // add in class brush
+  scatter.append("g")
+      .attr("class", "brush")
+      .call(brush)
+      .selectAll('rect')
+      .attr('height', h);
+  
+  // draw dots
+  var clickFlag = false;
+  var dots = scatter.selectAll(".dot")
+      .data(data)
+      .enter().append("circle")
+      .attr("id", function(d) { return d["Category"]; })
+      .attr("class", function(d) { return d["Category"]})
+      .attr("class", "dot")
+      .style("stroke", "#6C6EA0")
+      .attr("r", 4)
+      .attr("stroke-opacity", .5)
+      .attr("cx", function(d) {
+        if (xMap(d)) {
+          return xMap(d);
+        } else {
+          return 0;
+        }
+      })
+      .attr("cy", yMap)
+      .style("opacity", .8)
+      .style("fill", function(d) { return colour(cValue(d));}) 
+   
+      .on("mouseover", function(d) { tooltip.show(d); })
+      .on("mouseout", function(d) { tooltip.hide(d); });
+
+  graphTitle = graphSVG.append("text")
+    .attr("class", "label graph-label")
+    .attr("x", w / 1.67)
+    .attr("y", h * 1.15)
+    .attr("fill", "black")
+    .style("text-anchor", "middle")
+    .style("font-family", "futura")
+    .style("font-size", "1.7em")
+    .text("Tweet Sentiment Scatterplot")
+
+  dots.on('mousedown', function(){
+    brush_elm = graphSVG.select(".brush").node();
+    new_click_event = new Event('mousedown');
+    new_click_event.pageX = d3.event.pageX;
+    new_click_event.clientX = d3.event.clientX;
+    new_click_event.pageY = d3.event.pageY;
+    new_click_event.clientY = d3.event.clientY;
+    // brush_elm.dispatchEvent(new_click_event);
+  });
+  function brushended() {
+    var s = d3.event.selection;
+    if (!s) {
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+      xScale.domain(d3.extent(data, xValue)).nice();
+      yScale.domain(d3.extent(data, yValue)).nice();
+      d3.select("#slider-container").style("opacity", 1);
     } else {
-        x.className = x.className.replace(" w3-show", "");
-    }
+      xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+      yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+      graphSVG.select(".brush").call(brush.move, null);
+      d3.select("#slider-container").style("opacity", 0);
+      }
+    zoom();
+  }
+  function idled() {
+      idleTimeout = null;
+  }
+  function zoom() {
+    var t = graphSVG.transition().duration(2500);
+    graphSVG.select(".xaxis").transition(t).call(xAxis);
+    graphSVG.select(".yaxis").transition(t).call(yAxis);
+    graphSVG.selectAll(".dot").transition(t)
+      .attr("cx", xMap)
+      .attr("cy", yMap);
+  }
+}); // END OF DATA CSV
+/*
+######################################## 
+#                                      #
+#         SLIDER                       #
+#                                      #
+########################################*/
+var slider = createD3RangeSlider(0, 2000, "#slider-container");
+slider.onChange(function(newRange){
+      var scaledValues = scaleSlider(newRange.begin, newRange.end)
+      var lower = scaledValues.lower;
+      var upper = scaledValues.upper;
+  
+      var dems = d3.selectAll(".dot")
+        .filter(function(d) { 
+            return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
+          })
+        .size();
+      var gop = d3.selectAll(".dot")
+        .filter(function(d) { 
+          return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
+          })
+        .size();
+    
+      updateBars(partyCount());
+});
+function scaleSlider(begin, end) {
+  var lower = 0;
+  var upper = 0;
+  if (begin == 0) {
+    lower = -1;
+  } else if (begin == 1000) {
+    lower = 0;
+  } else {
+    lower = -1 + .001 * begin;
+  }
+  if (end == 1000) {
+    upper = 0;
+  } else {
+    upper = (end * .001) - 1;
+  }
+  return {lower: lower, upper: upper};
 }
+function partyCount() {
+  scaledValues = scaleSlider(slider.range()["begin"], slider.range()["end"])
+  var lower = scaledValues.lower;
+  var upper = scaledValues.upper;
+  var dems = d3.selectAll(".dot")
+    .filter(function(d) { 
+        return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
+      })
+    .size();
+  var gop = d3.selectAll(".dot")
+    .filter(function(d) { 
+      return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
+      })
+    .size();
+  return {dems: dems, gop: gop};
+}
+/*
+######################################## 
+#                                      #
+#         TIME TO RESIZE               #
+#                                      #
+########################################*/
+// http://bl.ocks.org/josiahdavis/a3534073492ca37b3682
+var updateBars = function(count) {
+    var dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+      barW = dim - barMargin.left - barMargin.right,
+      barH = dim - barMargin.top - barMargin.bottom;
+    var dems = count.dems;
+    var gop = count.gop;
+    var parties = [{party: "Republicans", count: gop}, {party: "Democrat", count: dems}]
+    // First update the y-axis domain to match data
+    // barY.domain([0, d3.max(parties, function(d) { return d.count; })]);
+    // yAxisHandleForUpdate.call(barY);
+    var bars = barSVG.selectAll(".bar").data(parties);
+    // Update old ones, already have x / width from before
+    bars
+      .transition().duration(250)
+      .attr("y", function(d,i) { return barY(d.count); })
+      .attr("height", function(d,i) { return barH - barY(d.count); });
+      // .append("text")
+      //   .attr("text-anchor", "middle")
+      //   .attr("x", function(d) { return barX(d.party); })
+      //   .attr("y", function(d) { return barX(d.count) - 10; })
+      //   .text(function(d) { return barX(d.count); });
+    // Remove old ones
+    bars.exit().remove();
+};
+function redraw() {
+  let brushSel = scatter.append('g').call(brush);
+
+  var margin = {top: 20, right: 20, bottom: 160, left: 60},
+   dim = Math.min(parseInt(d3.select("#scatterplot").style("width")), parseInt(d3.select("#scatterplot").style("height"))),
+      w = dim - margin.left - margin.right,
+      h = dim - margin.top - margin.bottom;
+
+  barMargin = {top: w * .016, right: w * .016, bottom: w * .2, left: w * .523},
+  dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+    barW = dim - barMargin.left - barMargin.right,
+    barH = dim - barMargin.top - barMargin.bottom;
+
+  // Resize bar chart  
+  barX.range([0, barW]);
+  barY.range([barH, 0]);
+  barSVG.select(".barx")
+    .call(d3.axisBottom(barX))
+    .attr("transform", "translate(0," + barH + ")");
+  barSVG.select(".bary")
+    .call(d3.axisLeft(barY));
+
+  barSVG.select("#bar")
+    .attr("width", barW + barMargin.left + barMargin.right)
+    .attr("height", barH + barMargin.top + barMargin.bottom);
+
+  barSVG.selectAll(".bar")
+    .attr("width", barX.bandwidth())
+    .attr("y", function(d) { return barY(d.count); })
+    .attr("height",function(d) { return barH - barY(d.count); });
+
+  // Resize scatterplot
+  xScale.range([0, w * 1.2]);
+  yScale.range([h, 0]);
+  graphSVG.select(".xaxis")
+      .attr("transform", "translate(0," + h + ")")
+      .call(xAxis);
+
+  graphSVG.selectAll(".x-axis-label")
+    .attr("x", w / 1.67)
+    .attr("y", h / 13);
+
+  graphSVG.select(".yaxis")
+      .call(yAxis);
+
+  graphSVG.selectAll(".y-axis-label")
+    .attr("x", w /2.5 * -1)
+    .attr("y", -30);
+
+  graphTitle
+    .attr("x", w / 1.67)
+    .attr("y", h * 1.15);
+
+  xAxis.ticks(w / 80);
+  graphSVG.selectAll('.dot')
+    .attr("cx", function(d) {
+          if (xMap(d)) {
+            return xMap(d);
+          } else {
+            return 0;
+          }
+        })
+    .attr("cy", yMap);
+
+  brush.move(brushSel, [xScale(w), yScale(h)]);
+
+}
+window.addEventListener('resize', redraw);
 </script>
-
 </body>
 </html>

@@ -13,7 +13,7 @@
 function drawButtons() {
     // var w = window.innerWidth - 250;
     var h = window.innerHeight;
-    var w = 750;
+    var w = 725;
     function removeByValue(array, value){
       return array.filter(function(elem, _index){
           return value != elem;
@@ -69,10 +69,10 @@ function drawButtons() {
     // Incarceration
     buttons.append("rect")
           .attr("id", "Incarceration")
-          .attr("x", w /7 )
+          .attr("x", w /14 )
           .attr("y", h / 200 )
-          .attr("width", w/ 10)
-          .attr("height", h / 20)
+          .attr("width", w/ 7)
+          .attr("height", h / 17)
           .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)   // ORIGINAL BUTTON .6
           .attr('stroke', '#ffffff')
@@ -88,19 +88,19 @@ function drawButtons() {
           .on("click", filterIssue);
     buttons.append("text")
             .text('Incarceration')
-            .attr("x", w /6.5 )
+            .attr("x", w /12)
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.2em");
+            .style("font-size", "1.4em");
             
     // Immigration
     buttons.append("rect")
           .attr("id", "Immigration")
-          .attr("x", w / 4)
+          .attr("x", w / 4.5)
           .attr("y", h / 200 )
-          .attr("width", w/ 10)
-          .attr("height", h / 20)
+          .attr("width", w/ 7)
+          .attr("height", h / 17)
           .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)  // ORIGINAL BUTTON .6
           .attr('stroke', '#ffffff')
@@ -116,19 +116,19 @@ function drawButtons() {
           .on("click", filterIssue);
     buttons.append("text")
             .text('Immigration')
-            .attr('x', w / 3.8)
+            .attr('x', w / 4.1)
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.2em");
+            .style("font-size", "1.4em");
 
     // Abortion
     buttons.append("rect")
           .attr("id", "Abortion")
-          .attr("x", w / 2.8)
+          .attr("x", w / 2.67)
           .attr("y", h / 200 )
-          .attr("width", w/ 10)
-          .attr("height", h / 20)
+          .attr("width", w/ 7)
+          .attr("height", h / 17)
           .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)
           .attr('stroke', '#ffffff')
@@ -144,19 +144,19 @@ function drawButtons() {
           .on("click", filterIssue);
     buttons.append("text")
             .text('Abortion')
-            .attr('x', w / 2.6)
+            .attr('x', w / 2.5)
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.2em");
+            .style("font-size", "1.4em");
 
     // GunControl
     buttons.append("rect")
           .attr("id", "GunControl")
-          .attr("x", w / 2.15)
+          .attr("x", w / 1.89)
           .attr("y", h / 200 )
-          .attr("width", w/ 10)
-          .attr("height", h / 20)
+          .attr("width", w/ 7)
+          .attr("height", h / 17)
           .attr("fill", "#6C6EA0")
           .attr("fill-opacity", .6)
           .attr('stroke', '#ffffff')
@@ -172,18 +172,18 @@ function drawButtons() {
           .on("click", filterIssue);
     buttons.append("text")
             .text('Gun control')
-            .attr('x', w / 2.06)
+            .attr('x', w / 1.85)
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.2em");
+            .style("font-size", "1.4em");
 
     buttons.append("rect")
           .attr("id", "Republican")
-           .attr("x", w / 1.7)
+           .attr("x", w / 1.47)
           .attr("y", h / 200 )
-          .attr("width", w/ 10)
-          .attr("height", h / 20)
+          .attr("width", w/ 8)
+          .attr("height", h / 17)
           .style("fill-opacity", .6)
           .style("fill", "#ff4040")
           .attr("rx", 20)
@@ -262,19 +262,19 @@ function drawButtons() {
          
 
     buttons.append("text")
-            .text('Republican')
-           .attr("x", w / 1.67)
+            .text('Republicans')
+           .attr("x", w / 1.45)
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.2em");
+            .style("font-size", "1.4em");
 
     buttons.append("rect")
           .attr("id", "Democrat")
-          .attr("x", w / 1.43)
+          .attr("x", w / 1.23)
           .attr("y", h / 200 )
-          .attr("width", w/ 10)
-          .attr("height", h / 20)
+          .attr("width", w/ 8)
+          .attr("height", h / 17)
           .style("fill", "#2D6D95")
           .style("fill-opacity", .6)
           .attr("rx", 20)
@@ -341,10 +341,10 @@ function drawButtons() {
          
     buttons.append("text")
             .text('Democrats')
-            .attr("x", w / 1.4)
+            .attr("x", w / 1.21)
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.2em");
+            .style("font-size", "1.4em");
 }
 

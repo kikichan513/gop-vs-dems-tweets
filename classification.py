@@ -22,7 +22,7 @@ class Classification:
          "GunControl":["gun", "control", "gun-control", "NRA", "school shooting", "shooting",
           "gun", "semi-automatics", "assault", "weapons", "handgun", "#guncontrol", "second amendment",
           "2ndamendment", "secondamendment", "#bigguns", "#gunlobby", "concealed carry", "gun show",
-          "#concealedcarry", "shot"], 
+          "#concealedcarry", "shot", "arms"], 
          "Incarceration":["incarceration", "criminal", "prison", "jail", "internment","jailed", 
          "imprisonment", "confinement", "detention", "#incarceration", "colorblindness","#PrisonReform",
           "juveniles","solidarity", "policing", "recidivism", "convict", "convicted", "#reentry"]}

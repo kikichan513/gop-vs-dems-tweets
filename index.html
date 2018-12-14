@@ -322,13 +322,15 @@ slider.onChange(function(newRange){
       var upper = scaledValues.upper;
   
       var dems = d3.selectAll(".dot")
-        .filter(function(d) { 
-            return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
+        .filter(function(d) {
+            return (d.Party == "Democrat") && (d.Sentiment >= lower) && (d.Sentiment <= upper) &&
+            (d3.select(this).style("opacity") == .8); 
           })
         .size();
       var gop = d3.selectAll(".dot")
         .filter(function(d) { 
-          return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
+          return (d.Party == "Republican") && (d.Sentiment >= lower) && (d.Sentiment <= upper) &&
+          (d3.select(this).style("opacity") == .8);
           })
         .size();
     
@@ -357,12 +359,14 @@ function partyCount() {
   var upper = scaledValues.upper;
   var dems = d3.selectAll(".dot")
     .filter(function(d) { 
-        return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper; 
+        return d.Party == "Democrat" && d.Sentiment >= lower && d.Sentiment <= upper &&
+        d3.select(this).style("opacity") == .8; 
       })
     .size();
   var gop = d3.selectAll(".dot")
     .filter(function(d) { 
-      return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper;
+      return d.Party == "Republican" && d.Sentiment >= lower && d.Sentiment <= upper &&
+      d3.select(this).style("opacity") == .8;
       })
     .size();
   return {dems: dems, gop: gop};

@@ -24,8 +24,10 @@
       </div>
 
       <div id="scatterplot">
-        <div id="slider-container">Sentiment Range
-          <br>  <small>Slide to see how many tweets per Party</small></div>
+        <div id="slider-container">
+            <div id="slider-name">Sentiment Range
+            <br>  <small>Slide to see the number of tweets per party in a range</small></div>
+        </div>
         <div id="range-label">
           <div id="range-label-left">-1</div>
           <div id="range-label-right">1</div>
@@ -161,7 +163,7 @@ var xAxisHandleForUpdate = barSVG.append("g")
         .attr("fill", "black")
         .style("text-anchor", "middle")
         .style("font-family", "futura")
-        .style("font-size", 16)
+        .style("font-size", "1.35em")
         .text("# of Tweets in Range");
 // add the y Axis
 var yAxisHandleForUpdate = barSVG.append("g")
@@ -280,6 +282,16 @@ d3.csv("final.csv", function(error, data) {
 
      }
   });
+
+  graphSVG.append("text")
+    .attr("class", "label graph-label")
+    .attr("x", w / 1.67)
+    .attr("y", h * 1.15)
+    .attr("fill", "black")
+    .style("text-anchor", "middle")
+    .style("font-family", "futura")
+    .style("font-size", "1.7em")
+    .text("Tweet Sentiment Scatterplot")
   dots.on('mousedown', function(){
     brush_elm = graphSVG.select(".brush").node();
     new_click_event = new Event('mousedown');

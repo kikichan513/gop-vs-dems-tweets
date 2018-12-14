@@ -2,15 +2,9 @@ h1 {
   font-size: 3.5em;
   text-align: center;
   font-family: futura;
-   color: #9192B8;
+   color: #777897;
    font-weight: bold;
-   /*text-shadow:
-       1px 1px 0 #BDBED4,
-     -1px -1px 0 #BDBED4,  
-      1px -1px 0 #BDBED4,
-      -1px 1px 0 #BDBED4,
-       1px 1px 0 #BDBED4;
-*/}
+}
 
 body {
   font: 11px sans-serif;
@@ -74,6 +68,7 @@ body {
   border-top-right-radius: 35px;
 }
 
+
 #buttoncontainer{
   width: 700px;
   margin-left:20px;
@@ -83,7 +78,7 @@ body {
   height: 40px; 
   width: 632px;
   position: absolute;
-  bottom: 80px;
+  bottom: 50px;
   left: 55px;
   font-family: "futura";
   font-size: 16px;

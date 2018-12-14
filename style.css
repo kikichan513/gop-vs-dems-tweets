@@ -68,6 +68,7 @@ body {
   border-top-right-radius: 35px;
 }
 
+
 #buttoncontainer{
   width: 700px;
   margin-bottom: -20px;
@@ -81,15 +82,29 @@ body {
   position: absolute;
   bottom: 50px;
   left: 55px;
+  font-family: "futura";
+  font-size: 16px;
 }
 
 #range-label{
-  height: 25px; 
-  width: 300px;
-  position: absolute;
-  bottom: 20px;
-  left: 100px;
+height: 25px;
+    width: 400px;
+    position: absolute;
+    bottom: 10px;
+    left: 60px;
 }
+
+#range-label-left{
+  float:left;
+  width: 5px;
+}
+
+#range-label-right{
+  width: 1200px;
+}
+
+
+
 
 #container {
   width: 100%;

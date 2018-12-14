@@ -24,8 +24,13 @@
       </div>
 
       <div id="scatterplot">
-        <div id="slider-container"></div>
+        <div id="slider-container">
+            <div id="slider-name">Sentiment Range
+            <br>  <small>Slide to see the number of tweets per party in a range</small></div>
+        </div>
         <div id="range-label">
+          <div id="range-label-left">-1</div>
+          <div id="range-label-right">1</div>
         </div>
       </div>
 
@@ -262,7 +267,7 @@ d3.csv("final.csv", function(error, data) {
         d3.select(this).style("fill",  "#303030")
         .attr("r", 6);
         // turn off mouseout 
-        d3.select(this).on("mouseleave", null);
+        d3.select(this).on("mouseout", null);
         // turn on tooltip 
         tooltip.show;
       }  
@@ -273,7 +278,8 @@ d3.csv("final.csv", function(error, data) {
         d3.select(this).style("fill", returncolor)
         .attr("r", 4);
         // turn off click function
-        d3.select(this).on("mouseout", tooltip.hide);
+        d3.select(this).on("mouseout", function(d) { tooltip.hide(d); })
+
      }
   });
 

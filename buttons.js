@@ -276,7 +276,7 @@ function drawButtons() {
           .attr("width", w/ 8)
           .attr("height", h / 17)
           .style("fill", "#2D6D95")
-          .style("fill-opacity", .6)
+          .style("fill-opacity", .7)
           .attr("rx", 20)
           .attr("ry", 20)
           .on('mouseover', function(d, i) {

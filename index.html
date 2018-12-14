@@ -88,7 +88,7 @@ var tooltip = d3.tip()
     .attr("class", "d3-tip")
     .offset([-10, 0])
     .html(function(d) {
-      return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> (" + xValue(d) + ")";
+      return "@" + d["Handle"] + " " + d["Tweet"] + "<br/> Sentiment: " + xValue(d) + "";
     }); 
 graphSVG.call(tooltip);     
 
@@ -246,8 +246,8 @@ d3.csv("final.csv", function(error, data) {
       .style("opacity", .8)
       .style("fill", function(d) { return colour(cValue(d));}) 
    
-      .on("mouseover", tooltip.show)
-      .on("mouseout",  tooltip.hide)
+      .on("mouseover", function(d) { tooltip.show(d); })
+      .on("mouseout", function(d) { tooltip.hide(d); })
       .on("click", function (d){
     
       // filtering each node
@@ -256,7 +256,7 @@ d3.csv("final.csv", function(error, data) {
         d3.select(this).style("fill",  "#303030")
         .attr("r", 6);
         // turn off mouseout 
-        d3.select(this).on("mouseout", null);
+        d3.select(this).on("mouseleave", null);
         // turn on tooltip 
         tooltip.show;
       }  
@@ -277,7 +277,7 @@ d3.csv("final.csv", function(error, data) {
     new_click_event.clientX = d3.event.clientX;
     new_click_event.pageY = d3.event.pageY;
     new_click_event.clientY = d3.event.clientY;
-    brush_elm.dispatchEvent(new_click_event);
+    // brush_elm.dispatchEvent(new_click_event);
   });
   function brushended() {
     var s = d3.event.selection;

@@ -13,6 +13,11 @@ d3.functor = function functor(v) {
 
 d3.tip = function() {
 
+
+  var resetColour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#2D6D95"}};
+  var newColour =  function(d) { if (d == "Republican"){return "#ff9f9f"} else {return "#81a7bf"}};
+
+
   var direction = d3_tip_direction,
       offset    = d3_tip_offset,
       html      = d3_tip_html,
@@ -30,7 +35,15 @@ d3.tip = function() {
   // Public - show the tooltip on the screen
   //
   // Returns a tip
-  tip.show = function() {
+  tip.show = function(curr) {
+    d3.selectAll(".dot")
+      .filter(function(d) { 
+          return d.Tweet == curr.Tweet;
+        })
+      .attr("r", 6)
+      .style("fill", function(d) { return newColour(d.Party); });
+
+
 
     var args = Array.prototype.slice.call(arguments)
     if(args[args.length - 1] instanceof SVGElement) target = args.pop()
@@ -61,11 +74,18 @@ d3.tip = function() {
   // Public - hide the tooltip
   //
   // Returns a tip
-  tip.hide = function() {
+  tip.hide = function(curr) {
     var nodel = getNodeEl()
     nodel
       .style('opacity', 0)
-      .style('pointer-events', 'none')
+      .style('pointer-events', 'none');
+
+     d3.selectAll(".dot")
+      .filter(function(d) { 
+          return d.Tweet == curr.Tweet;
+        })
+      .attr("r", 4)
+      .style("fill", function(d) { return resetColour(d.Party);} );
     return tip
   }
 

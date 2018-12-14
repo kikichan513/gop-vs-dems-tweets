@@ -92,7 +92,7 @@ function drawButtons() {
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.4em");
+            .style("font-size", "1.3em");
             
     // Immigration
     buttons.append("rect")
@@ -120,12 +120,12 @@ function drawButtons() {
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.4em");
+            .style("font-size", "1.3em");
 
     // Abortion
     buttons.append("rect")
           .attr("id", "Abortion")
-          .attr("x", w / 2.67)
+          .attr("x", w / 2.7)
           .attr("y", h / 200 )
           .attr("width", w/ 7)
           .attr("height", h / 17)
@@ -148,12 +148,12 @@ function drawButtons() {
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.4em");
+            .style("font-size", "1.3em");
 
     // GunControl
     buttons.append("rect")
           .attr("id", "GunControl")
-          .attr("x", w / 1.89)
+          .attr("x", w / 1.92)
           .attr("y", h / 200 )
           .attr("width", w/ 7)
           .attr("height", h / 17)
@@ -176,7 +176,7 @@ function drawButtons() {
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.4em");
+            .style("font-size", "1.3em");
 
     buttons.append("rect")
           .attr("id", "Republican")
@@ -267,7 +267,7 @@ function drawButtons() {
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.4em");
+            .style("font-size", "1.3em");
 
     buttons.append("rect")
           .attr("id", "Democrat")
@@ -345,6 +345,6 @@ function drawButtons() {
             .attr('y', window.innerHeight * .04)
             .attr('fill', 'black')
             .style("font-family", "futura")
-            .style("font-size", "1.4em");
+            .style("font-size", "1.3em");
 }
 

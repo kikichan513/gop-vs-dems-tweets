@@ -427,7 +427,8 @@ function redraw() {
       w = dim - margin.left - margin.right,
       h = dim - margin.top - margin.bottom;
 
-  var dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
+  barMargin = {top: w * .016, right: w * .016, bottom: w * .2, left: w * .523},
+  dim = Math.min(parseInt(d3.select("#bar").style("width")), parseInt(d3.select("#bar").style("height"))),
     barW = dim - barMargin.left - barMargin.right,
     barH = dim - barMargin.top - barMargin.bottom;
 

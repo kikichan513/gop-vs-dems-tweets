@@ -245,17 +245,16 @@ d3.csv("final.csv", function(error, data) {
       .attr("cy", yMap)
       .style("opacity", .8)
       .style("fill", function(d) { return colour(cValue(d));}) 
-      .on("mouseout", function(d){
-        tooltip.hide
-      })
+   
       .on("mouseover", tooltip.show)
+      .on("mouseout",  tooltip.hide)
       .on("click", function (d){
-      
-  
-
+    
+      // filtering each node
       if (this.style.fill == d3.rgb("#ff4040") || this.style.fill == d3.rgb("#66C7F4")){
          console.log('not clicked yet');
-         d3.select(this).style("fill",  "#303030");
+        d3.select(this).style("fill",  "#303030")
+        .attr("r", 6);
         // turn off mouseout 
         d3.select(this).on("mouseout", null);
         // turn on tooltip 
@@ -265,7 +264,8 @@ d3.csv("final.csv", function(error, data) {
          console.log("it's grey")
          returncolor = colour(cValue(d))
          console.log(returncolor)
-        d3.select(this).style("fill", returncolor);
+        d3.select(this).style("fill", returncolor)
+        .attr("r", 4);
         // turn off click function
         d3.select(this).on("mouseout", tooltip.hide);
      }

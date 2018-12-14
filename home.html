@@ -261,13 +261,22 @@ d3.csv("final.csv", function(error, data) {
       .style("fill", function(d) { return colour(cValue(d));}) 
    
       .on("mouseover", function(d) { tooltip.show(d); })
-      .on("mouseout", function(d) { tooltip.hide(d); })
+      .on("mouseout", function(d) { 
+        if (this.style.fill == d3.rgb("#ff4040") || this.style.fill == d3.rgb("#66C7F4")){
+          d3.select(this).style("fill",  "#000")
+          .attr("r", 7);
+          // turn off mouseout 
+          tooltip.showClicked(d);
+        } else {
+          
+          tooltip.hide(d);
+        }})
       .on("click", function (d){
     
       // filtering each node
-      if (this.style.fill == d3.rgb("#ff4040") || this.style.fill == d3.rgb("#66C7F4")){
+      if (this.style.fill == d3.rgb("#ff9f9f") || this.style.fill == d3.rgb("#81a7bf")){
          console.log('not clicked yet');
-        d3.select(this).style("fill",  "#303030")
+        d3.select(this).style("fill",  "#000")
         // turn off mouseout 
         d3.select(this).on("mouseout", null);
         // turn on tooltip 

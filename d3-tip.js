@@ -12,11 +12,8 @@ d3.functor = function functor(v) {
 };
 
 d3.tip = function() {
-
-
   var resetColour =  function(d) { if (d == "Republican"){return "#ff4040"} else {return "#2D6D95"}};
   var newColour =  function(d) { if (d == "Republican"){return "#ff9f9f"} else {return "#81a7bf"}};
-
 
   var direction = d3_tip_direction,
       offset    = d3_tip_offset,
@@ -43,8 +40,34 @@ d3.tip = function() {
       .attr("r", 6)
       .style("fill", function(d) { return newColour(d.Party); });
 
+    var args = Array.prototype.slice.call(arguments)
+    if(args[args.length - 1] instanceof SVGElement) target = args.pop()
 
+    var content = html.apply(this, args),
+        poffset = offset.apply(this, args),
+        dir     = direction.apply(this, args),
+        nodel   = getNodeEl(),
+        i       = directions.length,
+        coords,
+        scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
+        scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
 
+    nodel.html(content)
+      .style('position', 'absolute')
+      .style('opacity', 1)
+      .style('pointer-events', 'all')
+
+    while(i--) nodel.classed(directions[i], false)
+    coords = direction_callbacks[dir].apply(this)
+    nodel.classed(dir, true)
+      .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
+      .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
+
+    return tip
+  }
+
+  tip.showClicked = function(curr) {
+    
     var args = Array.prototype.slice.call(arguments)
     if(args[args.length - 1] instanceof SVGElement) target = args.pop()
 

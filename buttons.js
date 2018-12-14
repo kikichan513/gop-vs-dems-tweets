@@ -207,7 +207,7 @@ function drawButtons() {
              
                if (clickedparty.length){
                 d3.select('#Democrat')
-                .style("fill", "#6C6EA0")
+                .style("fill", "#2D6D95")
                 .style("fill-opacity", .6)  
               }
 

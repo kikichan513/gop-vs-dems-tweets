@@ -114,7 +114,7 @@ var clip = graphSVG.append("defs").append("clipPath")
             .attr("x", 0) 
             .attr("y", 0)
             .attr("transform", "translate(0,-20)") // fixes a bug where 
-            .attr("height", h+20);                // top of scatterplot was cut off
+            .attr("height", h + 20);                // top of scatterplot was cut off
 
 var scatter = graphSVG.append("g")
            .attr("id", "scatterplot")
@@ -270,7 +270,6 @@ d3.csv("final.csv", function(error, data) {
       if (this.style.fill == d3.rgb("#ff4040") || this.style.fill == d3.rgb("#66C7F4")){
          console.log('not clicked yet');
         d3.select(this).style("fill",  "#303030")
-        .attr("r", 6);
         // turn off mouseout 
         d3.select(this).on("mouseout", null);
         // turn on tooltip 
@@ -281,7 +280,6 @@ d3.csv("final.csv", function(error, data) {
          returncolor = colour(cValue(d))
          console.log(returncolor)
         d3.select(this).style("fill", returncolor)
-        .attr("r", 4);
         // turn off click function
         d3.select(this).on("mouseout", function(d) { tooltip.hide(d); })
 

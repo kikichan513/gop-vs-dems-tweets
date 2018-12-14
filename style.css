@@ -21,7 +21,6 @@ body {
 
 .axis path,
 .axis line {
-  
   stroke: #000;
   shape-rendering: crispEdges;
 }
@@ -68,7 +67,6 @@ body {
   border-top-right-radius: 35px;
 }
 
-
 #buttoncontainer{
   width: 700px;
   margin-bottom: -20px;
@@ -104,9 +102,6 @@ height: 25px;
 #range-label-right{
   width: 1200px;
 }
-
-
-
 
 #container {
   width: 100%;
@@ -157,6 +152,8 @@ height: 25px;
   font-size:13px;
   font-style: italic;
   margin-top: -20px;
+  margin-bottom: 20px;
+  margin-left: 7.5%;
 
 }
 #range-label {
